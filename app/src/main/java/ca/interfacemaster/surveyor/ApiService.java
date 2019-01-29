@@ -14,6 +14,12 @@ public class ApiService {
         post( "register/"+tid, null, responseHandler);
     }
 
+    public static void queryForSurveys(String tid, String uuid, AsyncHttpResponseHandler responseHandler) {
+        RequestParams params = new RequestParams();
+        params.add("uuid",uuid);
+        get( "trial/"+tid+"/surveys", params, responseHandler );
+    }
+
     // private supporting functions
 
     private static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
