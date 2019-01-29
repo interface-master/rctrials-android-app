@@ -8,6 +8,14 @@ public class ApiService {
     private static final String BASE_URL = "http://10.0.2.2/api/";
     private static AsyncHttpClient client = new AsyncHttpClient();
 
+    // public api functions
+
+    public static void registerIntoTrial(String tid, AsyncHttpResponseHandler responseHandler) {
+        post( "register/"+tid, null, responseHandler);
+    }
+
+    // private supporting functions
+
     private static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
