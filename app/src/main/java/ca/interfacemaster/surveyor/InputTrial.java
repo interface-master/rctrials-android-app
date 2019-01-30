@@ -63,7 +63,7 @@ public class InputTrial extends AppCompatActivity {
                             editor.putString(getString(R.string.pref_tid), tid);
                             editor.putString(getString(R.string.pref_uuid), uuid);
                             editor.commit();
-                            // TODO: goto survey view to process pre-intervention surveys
+                            // TODO: goto survey view to process pre-test surveys
                             Log.d("InputTrial",response.getString("surveys"));
                             // finished
                             finish();

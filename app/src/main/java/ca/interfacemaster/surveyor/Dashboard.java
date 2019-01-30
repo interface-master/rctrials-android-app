@@ -106,12 +106,12 @@ public class Dashboard extends AppCompatActivity {
                             Log.i("dashboard","success");
                             Bundle bundle = new Bundle();
                             bundle.putString("json", timeline.toString());
-                            Log.d("dashboard", bundle.toString());
-
-                            Log.d("success:",timeline.toString());
-//                            Intent gotoSurvey = new Intent(Dashboard.this, InputSurvey.class);
-//                            gotoSurvey.putExtra( "surveys", timeline. );
-//                            startActivity( gotoSurvey );
+                            Log.d("dashboard bundle", bundle.toString());
+                            Log.d("dashboard timeline",timeline.toString());
+                            // TODO: goto survey view to process surveys
+                            // Intent gotoSurvey = new Intent(Dashboard.this, InputSurvey.class);
+                            // gotoSurvey.putExtra( "surveys", timeline. );
+                            // startActivity( gotoSurvey );
                             // http://loopj.com/android-async-http/
                             // https://stackoverflow.com/questions/29339565/calling-rest-api-from-an-android-app
                         }
