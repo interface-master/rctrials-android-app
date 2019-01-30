@@ -1,5 +1,7 @@
 package ca.interfacemaster.surveyor;
 
+import android.util.Log;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -17,6 +19,7 @@ public class ApiService {
     public static void queryForSurveys(String tid, String uuid, AsyncHttpResponseHandler responseHandler) {
         RequestParams params = new RequestParams();
         params.add("uuid",uuid);
+        Log.i("dashboard","getting surveys for "+uuid+" in "+tid);
         get( "trial/"+tid+"/surveys", params, responseHandler );
     }
 

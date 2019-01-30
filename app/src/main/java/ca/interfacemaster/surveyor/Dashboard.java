@@ -5,11 +5,17 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -69,9 +75,14 @@ public class Dashboard extends AppCompatActivity {
      * Sets up the view to check for available surveys.
      */
     private void configureSurveys() {
+        String PREF_TID = getString(R.string.pref_tid);
+        String PREF_UUID = getString(R.string.pref_uuid);
         TextView header = findViewById(R.id.textDashboardHeader);
         TextView subHeader = findViewById(R.id.textDashboardSubheader);
         Button button = findViewById(R.id.buttonSetUpTID);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final String storedTID = sharedPreferences.getString(PREF_TID, null);
+        final String storedUUID = sharedPreferences.getString(PREF_UUID, null);
         header.setText(getString(R.string.welcome_header));
         subHeader.setText(getString(R.string.registered_sub_header));
         button.setText(getString(R.string.registered_check));
@@ -79,9 +90,40 @@ public class Dashboard extends AppCompatActivity {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: add a way to check for surveys
+                    ApiService.queryForSurveys(storedTID, storedUUID, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onStart() {
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            // If the response is JSONObject instead of expected JSONArray
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray timeline) {
+                            // Pull out the first event on the public timeline
+                            Log.i("dashboard","success");
+                            Bundle bundle = new Bundle();
+                            bundle.putString("json", timeline.toString());
+                            Log.d("dashboard", bundle.toString());
+
+                            Log.d("success:",timeline.toString());
+//                            Intent gotoSurvey = new Intent(Dashboard.this, InputSurvey.class);
+//                            gotoSurvey.putExtra( "surveys", timeline. );
+//                            startActivity( gotoSurvey );
+                            // http://loopj.com/android-async-http/
+                            // https://stackoverflow.com/questions/29339565/calling-rest-api-from-an-android-app
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.i("dashboard","failed fetching surveys ("+responseString+")");
+                        }
+                    });
                 }
             }
         );
+
     }
 }
