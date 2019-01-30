@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,6 +64,7 @@ public class InputTrial extends AppCompatActivity {
                             editor.putString(getString(R.string.pref_uuid), uuid);
                             editor.commit();
                             // TODO: goto survey view to process pre-intervention surveys
+                            Log.d("InputTrial",response.getString("surveys"));
                             // finished
                             finish();
                         } else {
