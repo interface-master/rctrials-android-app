@@ -54,14 +54,16 @@ public class InputTrial extends AppCompatActivity {
                     log.setText(getString(R.string.receiving));
                     try {
                         String uuid = response.getString("uuid");
+                        JSONArray surveys = response.getJSONArray("surveys");
                         if(!uuid.isEmpty()) {
                             bar.setProgress(100);
                             log.setText(getString(R.string.registered));
                             // save UUID
-                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(InputTrial.this);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(InputTrial.this);
+                            SharedPreferences.Editor editor = prefs.edit();
                             editor.putString(getString(R.string.pref_tid), tid);
                             editor.putString(getString(R.string.pref_uuid), uuid);
+                            editor.putString(getString(R.string.pref_surveys), surveys.toString());
                             editor.commit();
                             // TODO: goto survey view to process pre-test surveys
                             Log.d("InputTrial",response.getString("surveys"));
