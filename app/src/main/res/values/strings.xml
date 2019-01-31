@@ -14,5 +14,5 @@
 
     <string name="welcome_header">Welcome</string>
     <string name="welcome_set_up">Set Up</string>
-    <string name="welcome_sub_header">You are currently not enrolled in a trial. Click the button below to enter your trial ID.</string>
+    <string name="welcome_sub_header">You are currently not enrolled in a trial.\nClick the button below to enter your trial ID.</string>
 </resources>
