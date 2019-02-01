@@ -5,25 +5,32 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Survey {
-    private String title;
+import java.io.Serializable;
+
+public class Survey implements Serializable {
+    private String name;
 
     public Survey() {
-        this.title = "default";
+        this.name = "default";
     }
     public Survey(JSONObject obj) {
         Log.d("Survey Constructor",obj.toString());
         try {
-            this.title = obj.getString("name");
+            this.name = obj.getString("name");
         } catch(JSONException e) {
-            this.title = "Unknown Title";
+            this.name = "Unknown Name";
         }
     }
 
-    public String getTitle() {
-        return this.title;
+    public String getName() {
+        return this.name;
     }
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Survey [id:_, name:"+this.name+"]";
     }
 }
