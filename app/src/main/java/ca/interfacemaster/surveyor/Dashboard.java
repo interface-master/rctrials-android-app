@@ -148,6 +148,7 @@ public class Dashboard extends AppCompatActivity {
                     ApiService.queryForSurveys(storedTID, storedUUID, new JsonHttpResponseHandler() {
                         @Override
                         public void onStart() {
+                            // TODO: add progress spinner
                         }
 
                         @Override
@@ -181,6 +182,12 @@ public class Dashboard extends AppCompatActivity {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                             Log.i("dashboard","failed fetching surveys ("+responseString+")");
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            // TODO: turn off spinner
                         }
                     });
                 }
