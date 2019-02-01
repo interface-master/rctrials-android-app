@@ -1,6 +1,8 @@
 package ca.interfacemaster.surveyor;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +49,7 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final Survey survey = surveyList.get(position);
-        holder.title.setText(survey.getTitle());
+        holder.title.setText(survey.getName());
         // TODO: add more details to card
     }
 
@@ -57,6 +59,11 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
     }
 
     private void openSurvey(Survey survey) {
-        Toast.makeText(mContext, "Greetings from "+survey.getTitle(), Toast.LENGTH_SHORT).show();
+        ((AppCompatActivity)mContext).startActivityForResult(
+                new Intent(mContext, InputSurvey.class)
+                .putExtra("survey", survey),
+                2
+        );
+        Toast.makeText(mContext, "Greetings from "+survey.getName(), Toast.LENGTH_SHORT).show();
     }
 }
