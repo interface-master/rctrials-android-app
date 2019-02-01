@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:text=""
+        android:text="Loading"
         android:textSize="30dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
@@ -22,11 +22,11 @@
         />
 
     <TextView
-        android:id="@+id/textDashboardSubheader"
+        android:id="@+id/textDashboardSubHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:text=""
+        android:text="..."
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         app:layout_constraintTop_toBottomOf="@+id/textDashboardHeader"
@@ -37,11 +37,34 @@
         android:id="@+id/buttonSetUpTID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/textDashboardSubheader"
+        android:text=""
+        android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDashboardSubHeader"
+        />
+
+    <TextView
+        android:id="@+id/textAvailableSurveys"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Available Surveys"
+        android:textSize="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/buttonSetUpTID"
+        />
+
+    <include layout="@layout/list_surveys"
+        android:id="@+id/includeListSurveys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/textAvailableSurveys"
         />
 
 </android.support.constraint.ConstraintLayout>
