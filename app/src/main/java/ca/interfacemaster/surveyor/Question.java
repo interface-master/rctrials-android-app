@@ -41,14 +41,14 @@ public class Question implements Serializable {
         return this.type;
     }
 
-    public String getOptions() {
+    public String getOptionsString() {
         return this.options;
     }
 
-    public String[] getOptionsAry() {
+    public String[] getOptions() {
         return this.options.split("\\|");
     }
-    
+
     @Override
     public String toString() {
         return String.format("Question [ID:%d, Text:%s, Type:%s, Options:%s]", getQuestionID(), getText(), getType(), getOptions());
