@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -64,6 +63,5 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
                 .putExtra("survey", survey),
                 2
         );
-        Toast.makeText(mContext, "Greetings from "+survey.getName(), Toast.LENGTH_SHORT).show();
     }
 }
