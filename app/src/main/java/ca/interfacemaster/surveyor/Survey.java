@@ -62,6 +62,10 @@ public class Survey implements Serializable {
         return this.questions;
     }
 
+    public int getQuestionsLength() {
+        return this.questions.length;
+    }
+
     @Override
     public String toString() {
         String retVal = String.format("Survey [ID:%d, Title:%s, Questions:%s]", getSurveyID(), getName(), getQuestions());
