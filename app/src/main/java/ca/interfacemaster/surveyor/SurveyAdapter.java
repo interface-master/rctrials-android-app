@@ -65,3 +65,5 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
         );
     }
 }
+
+// TODO: menus for cards: https://www.androidhive.info/2016/05/android-working-with-card-view-and-recycler-view/
