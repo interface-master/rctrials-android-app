@@ -31,7 +31,7 @@ public class InputSurvey extends AppCompatActivity {
         TextView num = findViewById(R.id.textQuestionNofM);
         Button cancel = findViewById(R.id.btnCancel);
         Button next = findViewById(R.id.btnNext);
-        AdapterViewFlipper adapterViewFlipper = findViewById(R.id.adapterViewFlipper);
+        final AdapterViewFlipper adapterViewFlipper = findViewById(R.id.adapterViewFlipper);
 
         // adapter
         adapterViewFlipper.setAdapter(new QuestionAdapter(this, survey.getQuestions()));
@@ -52,6 +52,14 @@ public class InputSurvey extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        // TODO: add logic for next/finish button
+        next.setEnabled(true);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapterViewFlipper.showNext();
             }
         });
     }
