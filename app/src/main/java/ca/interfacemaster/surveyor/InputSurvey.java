@@ -1,6 +1,5 @@
 package ca.interfacemaster.surveyor;
 
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterViewFlipper;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,6 +22,7 @@ public class InputSurvey extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.transition.slide_over, R.transition.fadeout);
         // extract survey
         Bundle extras = getIntent().getExtras();
         survey = (Survey) extras.getSerializable("survey");
@@ -98,5 +97,11 @@ public class InputSurvey extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        overridePendingTransition(R.transition.fadein, R.transition.slide_away);
+        super.onPause();
     }
 }
