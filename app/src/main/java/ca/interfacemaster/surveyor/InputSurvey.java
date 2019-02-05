@@ -1,26 +1,52 @@
 package ca.interfacemaster.surveyor;
 
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterViewFlipper;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class InputSurvey extends AppCompatActivity {
     private static Survey survey;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_survey);
         // extract survey
         Bundle extras = getIntent().getExtras();
         survey = (Survey) extras.getSerializable("survey");
         // configure view
+        setupView();
         setUpSurvey();
+    }
+
+
+    private void setupView() {
+        // set navigation as the view
+        setContentView(R.layout.navigation);
+        // grab frame and add content
+        LinearLayout frame = findViewById(R.id.content_frame);
+        View contentView = LayoutInflater.from(frame.getContext())
+                .inflate(R.layout.activity_input_survey, frame, false);
+        frame.addView( contentView );
+        // configure toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
     }
 
     private void setUpSurvey() {
@@ -62,5 +88,15 @@ public class InputSurvey extends AppCompatActivity {
                 adapterViewFlipper.showNext();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -14,9 +14,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -38,16 +41,26 @@ public class Dashboard extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.navigation);
 
+        setupView();
+        setupNav();
+        checkConfig();
+    }
+
+    private void setupView() {
+        // set navigation as the view
+        setContentView(R.layout.navigation);
+        // grab frame and add content
+        LinearLayout frame = findViewById(R.id.content_frame);
+        View contentView = LayoutInflater.from(frame.getContext())
+                .inflate(R.layout.activity_dashboard, frame, false);
+        frame.addView( contentView );
+        // configure toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-
-        setupNav();
-        checkConfig();
     }
 
     private void setupNav() {
