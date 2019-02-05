@@ -94,7 +94,7 @@ public class InputSurvey extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
