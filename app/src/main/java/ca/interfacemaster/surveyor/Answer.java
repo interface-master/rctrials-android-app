@@ -1,6 +1,8 @@
 package ca.interfacemaster.surveyor;
 
-public class Answer {
+import java.io.Serializable;
+
+public class Answer implements Serializable {
     private int qid; // question ID
     private String answer;
 
