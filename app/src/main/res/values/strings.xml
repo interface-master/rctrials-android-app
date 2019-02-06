@@ -4,6 +4,7 @@
     <string name="pref_tid">ca.interfacemaster.surveyor.tid</string>
     <string name="pref_uuid">ca.interfacemaster.surveyor.uuid</string>
     <string name="pref_surveys">ca.interfacemaster.surveyor.surveys</string>
+    <string name="pref_answers">ca.interfacemaster.surveyor.answers</string>
 
     <string name="receiving">Receiving</string>
     <string name="register">Register</string>
