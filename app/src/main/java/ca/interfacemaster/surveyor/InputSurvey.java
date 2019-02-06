@@ -93,20 +93,26 @@ public class InputSurvey extends AppCompatActivity {
         Question q = questions[pos];
         // save answer
         Answer answer = new Answer(q.getQuestionID());
-        if( q.getType().equalsIgnoreCase("text") ) {
+        if (q.getType().equalsIgnoreCase("text")) {
             EditText ans1 = v.findViewById(R.id.editTextAnswer);
             answer.setAnswer(ans1.getText().toString());
-        }
-        else if( q.getType().equalsIgnoreCase("mc") ) {
+        } else if (q.getType().equalsIgnoreCase("mc")) {
             SeekBar ans2 = v.findViewById(R.id.sliderAnswer);
-            answer.setAnswer(""+ans2.getProgress());
+            answer.setAnswer("" + ans2.getProgress());
         }
         answers[pos] = answer;
         q.setAnswer(answer);
-        // flip to next
-        mAdapterViewFlipper.showNext();
-        // update view
-        updateQuestionNofM();
+        // flip
+        if( pos == questions.length-1 ) {
+            // FINISH
+            finish();
+        } else {
+            // NEXT
+            // flip to next
+            mAdapterViewFlipper.showNext();
+            // update view
+            updateQuestionNofM();
+        }
     }
 
     private void updateQuestionNofM() {
@@ -121,6 +127,11 @@ public class InputSurvey extends AppCompatActivity {
         double percentDbl = ((double)n / (double)m) * 100;
         int percent = (int) Math.round(percentDbl);
         progress.setProgress(percent);
+        // check if at the end
+        if(n == m) {
+            Button next = findViewById(R.id.btnNext);
+            next.setText("Finish");
+        }
         Log.d("input survey progress", String.format("%d",percent) );
     }
 
@@ -138,5 +149,14 @@ public class InputSurvey extends AppCompatActivity {
     protected void onPause() {
         overridePendingTransition(R.transition.fadein, R.transition.slide_away);
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("DESTROY SURVEY save:", String.format("Answers: %d",answers.length));
+        for(int i=0; i<answers.length; i++ ) {
+            Log.d("answer",String.format("i:%d a:%s",i,answers[i].getAnswer()));
+        }
+        super.onDestroy();
     }
 }
