@@ -155,7 +155,9 @@ public class InputSurvey extends AppCompatActivity {
     protected void onDestroy() {
         Log.d("DESTROY SURVEY save:", String.format("Answers: %d",answers.length));
         for(int i=0; i<answers.length; i++ ) {
-            Log.d("answer",String.format("i:%d a:%s",i,answers[i].getAnswer()));
+            if( answers[i] != null ) {
+                Log.d("answer", String.format("i:%d a:%s", i, answers[i].getAnswer()));
+            }
         }
         super.onDestroy();
     }
