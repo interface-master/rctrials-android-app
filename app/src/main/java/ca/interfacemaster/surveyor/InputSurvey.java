@@ -81,15 +81,17 @@ public class InputSurvey extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveAnswer();
+                gotoNextQuestion();
             }
         });
     }
 
-    private void saveAnswer() {
+    private void gotoNextQuestion() {
+        // refs
         int pos = mAdapterViewFlipper.getDisplayedChild();
         View v = mAdapterViewFlipper.getCurrentView();
         Question q = questions[pos];
+        // save answer
         Answer answer = new Answer(q.getQuestionID());
         if( q.getType().equalsIgnoreCase("text") ) {
             EditText ans1 = v.findViewById(R.id.editTextAnswer);
@@ -101,17 +103,22 @@ public class InputSurvey extends AppCompatActivity {
         }
         answers[pos] = answer;
         q.setAnswer(answer);
+        // flip to next
         mAdapterViewFlipper.showNext();
+        // update view
+        updateQuestionNofM();
     }
 
     private void updateQuestionNofM() {
         // refs
         TextView num = findViewById(R.id.textQuestionNofM);
         ProgressBar progress = findViewById(R.id.progressBar);
+        int n = mAdapterViewFlipper.getDisplayedChild()+1;
+        int m = survey.getQuestionsLength();
         // text
-        num.setText( String.format("Question %d of %d",1,survey.getQuestionsLength()) );
+        num.setText( String.format("Question %d of %d",n,m) );
         // progress
-        double percentDbl = (1.0 / survey.getQuestionsLength()) * 100;
+        double percentDbl = ((double)n / (double)m) * 100;
         int percent = (int) Math.round(percentDbl);
         progress.setProgress(percent);
         Log.d("input survey progress", String.format("%d",percent) );
