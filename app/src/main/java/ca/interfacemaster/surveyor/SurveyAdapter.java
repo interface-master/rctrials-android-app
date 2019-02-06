@@ -39,6 +39,7 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                itemView.setEnabled(false);
                 int pos = Dashboard.mRecyclerView.getChildAdapterPosition(v);
                 openSurvey(surveyList.get(pos));
             }
