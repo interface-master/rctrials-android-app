@@ -11,13 +11,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterViewFlipper;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class InputSurvey extends AppCompatActivity {
     private static Survey survey;
+    private static Question[] questions;
+    private static Answer[] answers;
     private DrawerLayout mDrawerLayout;
+    private AdapterViewFlipper mAdapterViewFlipper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,6 @@ public class InputSurvey extends AppCompatActivity {
         setupView();
         setUpSurvey();
     }
-
 
     private void setupView() {
         // set navigation as the view
@@ -46,31 +50,24 @@ public class InputSurvey extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        actionbar.setTitle(survey.getName());
     }
 
     private void setUpSurvey() {
         Log.d("InputSurvey survey", survey.toString());
         // refs
-        TextView name = findViewById(R.id.textSurveyName);
-        ProgressBar progress = findViewById(R.id.progressBar);
-        TextView num = findViewById(R.id.textQuestionNofM);
         Button cancel = findViewById(R.id.btnCancel);
         Button next = findViewById(R.id.btnNext);
-        final AdapterViewFlipper adapterViewFlipper = findViewById(R.id.adapterViewFlipper);
+        mAdapterViewFlipper = findViewById(R.id.adapterViewFlipper);
+        questions = survey.getQuestions();
+        answers = new Answer[questions.length];
 
         // adapter
-        adapterViewFlipper.setAdapter(new QuestionAdapter(this, survey.getQuestions()));
-        adapterViewFlipper.setDisplayedChild(0);
-
-        // progress
-        double percentDbl = (1.0 / survey.getQuestionsLength()) * 100;
-        int percent = (int) Math.round(percentDbl);
-        progress.setProgress(percent);
-        Log.d("input survey progress", String.format("%d",percent) );
+        mAdapterViewFlipper.setAdapter(new QuestionAdapter(this, questions));
+        mAdapterViewFlipper.setDisplayedChild(0);
 
         // text
-        name.setText(survey.getName());
-        num.setText( String.format("Question %d of %d",1,survey.getQuestionsLength()) );
+        updateQuestionNofM();
 
         // buttons
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -84,9 +81,40 @@ public class InputSurvey extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapterViewFlipper.showNext();
+                saveAnswer();
             }
         });
+    }
+
+    private void saveAnswer() {
+        int pos = mAdapterViewFlipper.getDisplayedChild();
+        View v = mAdapterViewFlipper.getCurrentView();
+        Question q = questions[pos];
+        Answer answer = new Answer(q.getQuestionID());
+        if( q.getType().equalsIgnoreCase("text") ) {
+            EditText ans1 = v.findViewById(R.id.editTextAnswer);
+            answer.setAnswer(ans1.getText().toString());
+        }
+        else if( q.getType().equalsIgnoreCase("mc") ) {
+            SeekBar ans2 = v.findViewById(R.id.sliderAnswer);
+            answer.setAnswer(""+ans2.getProgress());
+        }
+        answers[pos] = answer;
+        q.setAnswer(answer);
+        mAdapterViewFlipper.showNext();
+    }
+
+    private void updateQuestionNofM() {
+        // refs
+        TextView num = findViewById(R.id.textQuestionNofM);
+        ProgressBar progress = findViewById(R.id.progressBar);
+        // text
+        num.setText( String.format("Question %d of %d",1,survey.getQuestionsLength()) );
+        // progress
+        double percentDbl = (1.0 / survey.getQuestionsLength()) * 100;
+        int percent = (int) Math.round(percentDbl);
+        progress.setProgress(percent);
+        Log.d("input survey progress", String.format("%d",percent) );
     }
 
     @Override

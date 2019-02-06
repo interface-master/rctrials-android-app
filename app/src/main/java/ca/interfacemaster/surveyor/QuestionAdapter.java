@@ -46,7 +46,6 @@ public class QuestionAdapter extends BaseAdapter {
 
         // refs
         final Question q = questionList.get(position);
-        final Answer a = new Answer(q.getQuestionID());
         final TextView question = convertView.findViewById(R.id.textQuestion);
         final EditText answer = convertView.findViewById(R.id.editTextAnswer);
         final SeekBar slider = convertView.findViewById(R.id.sliderAnswer);
@@ -59,19 +58,24 @@ public class QuestionAdapter extends BaseAdapter {
                 answer.setVisibility(View.VISIBLE);
                 answer.setHorizontallyScrolling(false);
                 answer.setLines(3);
+                if(q.hasAnswer()) {
+                    answer.setText( q.getAnswerText() );
+                }
                 break;
             case "mc":
                 final String[] opts = q.getOptions();
-                a.setAnswer(opts[0]);
-                tooltip.setText(a.getAnswer());
+                tooltip.setText(opts[0]);
                 tooltip.setVisibility(View.VISIBLE);
+                if(q.hasAnswer()) {
+                    slider.setProgress(q.getAnswerVal());
+                    tooltip.setText(q.getAnswerText());
+                }
                 slider.setMax(opts.length-1);
                 slider.setVisibility(View.VISIBLE);
                 slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        a.setAnswer( opts[progress] );
-                        tooltip.setText( a.getAnswer() );
+                        tooltip.setText( opts[progress] );
                     }
 
                     @Override
