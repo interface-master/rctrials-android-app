@@ -4,7 +4,6 @@ public class Answer {
     private int qid; // question ID
     private String answer;
 
-    public Answer() {}
     public Answer(int qid) {
         this.qid = qid;
     }
@@ -18,5 +17,10 @@ public class Answer {
     }
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Answer [QID:%d, Text:%s]",qid,getAnswer());
     }
 }
