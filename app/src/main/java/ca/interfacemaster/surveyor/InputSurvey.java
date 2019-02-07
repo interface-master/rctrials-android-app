@@ -22,7 +22,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 public class InputSurvey extends AppCompatActivity {
     private static Survey survey;
@@ -160,56 +159,53 @@ public class InputSurvey extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        String PREF_ANSWERS = getString(R.string.pref_answers);
+        String PREF_SURVEYS = getString(R.string.pref_surveys);
         String PREF_TID = getString(R.string.pref_tid);
-        String PREF_UUID = getString(R.string.pref_uuid);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = pref.edit();
+        String storedSurveys = pref.getString(PREF_SURVEYS, null);
         String storedTID = pref.getString(PREF_TID, null);
-        JSONArray ans = new JSONArray();
+        JSONArray jSurveys;
         try {
-            String storedAnswers = pref.getString(PREF_ANSWERS, "");
-            ans = new JSONArray(storedAnswers);
-        } catch (JSONException err) {
-            // TODO: catch json exception
+            jSurveys = new JSONArray(storedSurveys);
+        } catch (JSONException e) {
+            // todo: something about it
+            jSurveys = new JSONArray();
         }
-        for( int i=0; i<answers.length; i++ ){
+
+        Log.d("HERE jSurveys",jSurveys.toString());
+        Log.d("HERE sid", String.format("%d",survey.getSurveyID()));
+        for(int i=0; i<questions.length; i++) {
+            Log.d("HERE question", String.format("%d :: %s", i, questions[i].toString()));
+        }
+        // look for this survey in shared prefs
+//        Survey update = null;
+        for(int i=0; i<jSurveys.length(); i++) {
             try {
-                JSONObject a = new JSONObject(answers[i].toJSON());
-                ans.put(a);
+                JSONObject s = jSurveys.getJSONObject(i);
+                if (s.getInt("sid") == survey.getSurveyID()) {
+                    jSurveys.put( i, survey.getJSONObject() );
+//                    update = survey;
+                    break;
+                }
             } catch (JSONException e) {
-                // todo: handle exception
-            } catch (NullPointerException e) {
-                // todo: also handle this exception
+                // todo: something about it
             }
         }
-        String answer = "";
-        try {
-            answer = new JSONStringer()
-                    .object()
-                    .key("tid")
-                    .value(storedTID)
-                    .key("sid")
-                    .value(survey.getSurveyID())
-                    .key("answers")
-                    .value(ans)
-                    .endObject()
-                    .toString();
+        // update questions with answers
+//        if( update != null ) {
+//            Log.d("UPDATE THIS",update.toString() );
+//        }
 
-        } catch(JSONException e) {
-            // todo: handle exception
-        }
-
-        ans.put(answer);
-        editor.putString(PREF_ANSWERS, ans.toString());
+        editor.putString(PREF_SURVEYS, jSurveys.toString());
         editor.commit();
 
-        Log.d("DESTROY SURVEY save:", String.format("Answers: %d",answers.length));
-        for(int i=0; i<answers.length; i++ ) {
-            if( answers[i] != null ) {
-                Log.d("answer", String.format("i:%d a:%s", i, answers[i].getAnswer()));
-            }
-        }
+//        Log.d("DESTROY SURVEY save:", String.format("Answers: %d",answers.length));
+//        for(int i=0; i<answers.length; i++ ) {
+//            if( answers[i] != null ) {
+//                Log.d("answer", String.format("i:%d a:%s", i, answers[i].getAnswer()));
+//            }
+//        }
         super.onDestroy();
     }
 }
