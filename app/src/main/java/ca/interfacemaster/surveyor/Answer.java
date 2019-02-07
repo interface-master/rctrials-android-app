@@ -32,11 +32,26 @@ public class Answer implements Serializable {
         }
     }
 
+    public int getQuestionID() {
+        return this.qid;
+    }
+
     public String getAnswer() {
         return answer;
     }
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("qid", this.qid);
+            obj.put("answer", this.answer);
+        } catch (JSONException e) {
+            // todo: something about it
+        }
+        return obj;
     }
 
     @Override
