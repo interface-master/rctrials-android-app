@@ -1,5 +1,7 @@
 package ca.interfacemaster.surveyor;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
 
 public class InputSurvey extends AppCompatActivity {
     private static Survey survey;
@@ -153,6 +160,50 @@ public class InputSurvey extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        String PREF_ANSWERS = getString(R.string.pref_answers);
+        String PREF_TID = getString(R.string.pref_tid);
+        String PREF_UUID = getString(R.string.pref_uuid);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = pref.edit();
+        String storedTID = pref.getString(PREF_TID, null);
+        JSONArray ans = new JSONArray();
+        try {
+            String storedAnswers = pref.getString(PREF_ANSWERS, "");
+            ans = new JSONArray(storedAnswers);
+        } catch (JSONException err) {
+            // TODO: catch json exception
+        }
+        for( int i=0; i<answers.length; i++ ){
+            try {
+                JSONObject a = new JSONObject(answers[i].toJSON());
+                ans.put(a);
+            } catch (JSONException e) {
+                // todo: handle exception
+            } catch (NullPointerException e) {
+                // todo: also handle this exception
+            }
+        }
+        String answer = "";
+        try {
+            answer = new JSONStringer()
+                    .object()
+                    .key("tid")
+                    .value(storedTID)
+                    .key("sid")
+                    .value(survey.getSurveyID())
+                    .key("answers")
+                    .value(ans)
+                    .endObject()
+                    .toString();
+
+        } catch(JSONException e) {
+            // todo: handle exception
+        }
+
+        ans.put(answer);
+        editor.putString(PREF_ANSWERS, ans.toString());
+        editor.commit();
+
         Log.d("DESTROY SURVEY save:", String.format("Answers: %d",answers.length));
         for(int i=0; i<answers.length; i++ ) {
             if( answers[i] != null ) {

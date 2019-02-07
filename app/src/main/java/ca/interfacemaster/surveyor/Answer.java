@@ -1,5 +1,11 @@
 package ca.interfacemaster.surveyor;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
 import java.io.Serializable;
 
 public class Answer implements Serializable {
@@ -9,9 +15,21 @@ public class Answer implements Serializable {
     public Answer(int qid) {
         this.qid = qid;
     }
-    public Answer(int qid, String answer) {
-        this.qid = qid;
-        this.answer = answer;
+//    public Answer(int qid, String answer) {
+//        this.qid = qid;
+//        this.answer = answer;
+//    }
+    public Answer(JSONObject obj) {
+        try {
+            this.qid = obj.getInt("qid");
+        } catch(JSONException e) {
+            this.qid = -1;
+        }
+        try {
+            this.answer = obj.getString("answer");
+        } catch(JSONException e) {
+            this.answer = "---";
+        }
     }
 
     public String getAnswer() {
@@ -24,5 +42,21 @@ public class Answer implements Serializable {
     @Override
     public String toString() {
         return String.format("Answer [QID:%d, Text:%s]",qid,getAnswer());
+    }
+
+    public String toJSON() {
+        try {
+            return new JSONStringer()
+                .object()
+                    .key("qid")
+                    .value(this.qid)
+                    .key("answer")
+                    .value(this.answer)
+                .endObject()
+                .toString();
+        } catch (JSONException e) {
+            // TODO: handle exception
+            return "";
+        }
     }
 }
