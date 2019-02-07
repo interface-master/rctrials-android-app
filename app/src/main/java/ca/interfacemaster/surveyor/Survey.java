@@ -62,8 +62,34 @@ public class Survey implements Serializable {
         return this.questions;
     }
 
+    public Question getQuestion(int id) {
+        for(int i=0; i<this.questions.length; i++) {
+            if(this.questions[i].getQuestionID() == id) {
+                return this.questions[i];
+            }
+        }
+        return null;
+    }
+
     public int getQuestionsLength() {
         return this.questions.length;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        JSONArray qs = new JSONArray();
+        try {
+            obj.put("tid", this.tid);
+            obj.put("sid", this.sid);
+            obj.put("name", this.name);
+            for( int i = 0; i < this.questions.length; i++ ) {
+                qs.put(questions[i].getJSONObject());
+            }
+            obj.put("questions", qs);
+        } catch (JSONException e) {
+            // todo: something about it
+        }
+        return obj;
     }
 
     @Override
