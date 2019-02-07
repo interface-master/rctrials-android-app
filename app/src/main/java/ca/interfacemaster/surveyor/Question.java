@@ -58,6 +58,13 @@ public class Question implements Serializable {
     public Boolean hasAnswer() {
         return answer != null;
     }
+    public Answer getAnswer() {
+        if( hasAnswer() ) {
+            return answer;
+        } else {
+            return null;
+        }
+    }
     public int getAnswerVal() {
         if( this.type.equalsIgnoreCase("mc") ) {
             return Integer.parseInt(this.answer.getAnswer());
@@ -77,8 +84,28 @@ public class Question implements Serializable {
         return "NULL";
     }
 
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("qid", this.qid);
+            obj.put("text", this.text);
+            obj.put("type", this.type);
+            obj.put("options", this.options);
+            if( hasAnswer() ) {
+                obj.put("answer", this.answer.getJSONObject());
+            }
+        } catch( JSONException e ) {
+            // todo: something about it
+        }
+        return obj;
+    }
+
     @Override
     public String toString() {
-        return String.format("Question [ID:%d, Text:%s, Type:%s, Options:%s]", getQuestionID(), getText(), getType(), getOptionsString());
+        if( hasAnswer() ) {
+            return String.format("Question [ID:%d, Text:%s, Type:%s, Options:%s, Answer:%s]", getQuestionID(), getText(), getType(), getOptionsString(), getAnswer().toJSON());
+        } else {
+            return String.format("Question [ID:%d, Text:%s, Type:%s, Options:%s, Answer:%s]", getQuestionID(), getText(), getType(), getOptionsString(), "none");
+        }
     }
 }
