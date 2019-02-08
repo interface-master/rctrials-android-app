@@ -17,6 +17,10 @@ public class Survey implements Serializable {
     private String name; // Survey Name
     private transient Question[] questions;
 
+    public static final int DEFAULT = 0;
+    public static final int INCOMPLETE = 1;
+    public static final int COMPLETE = 2;
+
     public Survey() {}
     public Survey(JSONObject obj) {
         Log.d("Survey Constructor",obj.toString());
@@ -106,12 +110,11 @@ public class Survey implements Serializable {
         }
         Log.d("PROCESSING DONE",String.format("Q:%d, A:%d", countQs, countAs));
         if( countAs > 0 && countQs > countAs ) {
-            return 1; // incomplete
+            return Survey.INCOMPLETE;
         } else if ( countQs == countAs ) {
-            return 2; // complete
+            return Survey.COMPLETE;
         }
-        return 0; // default
-        // TODO: turn these ^^^ into constants !!!
+        return Survey.DEFAULT;
     }
 
     @Override
