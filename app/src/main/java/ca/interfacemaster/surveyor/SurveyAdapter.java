@@ -2,8 +2,10 @@ package ca.interfacemaster.surveyor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +56,18 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final Survey survey = surveyList.get(position);
-        holder.title.setText(survey.getName());
+        holder.action.setText(survey.getName());
+        // set icon based on survey answer state
+        Drawable icon = mContext.getResources().getDrawable(R.drawable.ic_assignment_black);
+        switch (survey.getState()) {
+            case 1:
+                icon = mContext.getResources().getDrawable(R.drawable.ic_assignment_late_black);
+                break;
+            case 2:
+                icon = mContext.getResources().getDrawable(R.drawable.ic_assignment_turned_in_black);
+                break;
+        }
+        holder.action.setCompoundDrawablesWithIntrinsicBounds(null,null, icon, null);
         // TODO: add more details to card
     }
 
