@@ -1,6 +1,4 @@
-package ca.interfacemaster.surveyor;
-
-import android.util.Log;
+package ca.interfacemaster.surveyor.service;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -15,14 +13,15 @@ public class ApiService {
     // public api functions
 
     public static void registerIntoTrial(String tid, AsyncHttpResponseHandler responseHandler) {
-        post( "register/"+tid, null, responseHandler);
+        String url = String.format("register/%s",tid);
+        post(url, null, responseHandler);
     }
 
     public static void queryForSurveys(String tid, String uuid, AsyncHttpResponseHandler responseHandler) {
         RequestParams params = new RequestParams();
         params.add("uuid",uuid);
-        Log.i("dashboard","getting surveys for "+uuid+" in "+tid);
-        get( "trial/"+tid+"/surveys", params, responseHandler );
+        String url = String.format("trial/%s/surveys",tid);
+        get(url, params, responseHandler);
     }
 
     public static void postSurvey(String tid, int sid, String uuid, JSONArray answers, AsyncHttpResponseHandler responseHandler) {
@@ -30,9 +29,7 @@ public class ApiService {
         params.add("uuid",uuid);
         params.add("answers",answers.toString());
         String url = String.format("trial/%s/survey/%d",tid,sid);
-        Log.d("POST SURVEY URL",url);
-        Log.d("POST BODY",params.toString());
-        post(url, params, responseHandler );
+        post(url, params, responseHandler);
     }
 
     // private supporting functions
