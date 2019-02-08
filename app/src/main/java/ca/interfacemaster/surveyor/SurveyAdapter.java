@@ -32,6 +32,10 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
         this.surveyList = surveyList;
     }
 
+    public void setSurveyList(List<Survey> list) {
+        this.surveyList = list;
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemView = LayoutInflater.from(parent.getContext())
