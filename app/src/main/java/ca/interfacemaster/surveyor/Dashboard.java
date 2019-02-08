@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -93,6 +92,7 @@ public class Dashboard extends AppCompatActivity {
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         checkConfig();
+        updateSurveyCards();
     }
 
     /**
@@ -137,9 +137,9 @@ public class Dashboard extends AppCompatActivity {
      * Sets up the view to check for available surveys.
      */
     private void configureSurveys() {
+        // refs
         String PREF_TID = getString(R.string.pref_tid);
         String PREF_UUID = getString(R.string.pref_uuid);
-        String PREF_SURVEYS = getString(R.string.pref_surveys);
         TextView header = findViewById(R.id.textDashboardHeader);
         TextView subHeader = findViewById(R.id.textDashboardSubHeader);
         Button button = findViewById(R.id.buttonSetUpTID);
@@ -148,7 +148,7 @@ public class Dashboard extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final String storedTID = prefs.getString(PREF_TID, null);
         final String storedUUID = prefs.getString(PREF_UUID, null);
-        final String storedSurveys = prefs.getString(PREF_SURVEYS, null);
+        // text
         header.setText(getString(R.string.welcome_header));
         subHeader.setText(getString(R.string.registered_sub_header));
         button.setText(getString(R.string.registered_check));
@@ -183,6 +183,7 @@ public class Dashboard extends AppCompatActivity {
                             editor.commit();
 
 
+
                             // TODO: goto survey view to process surveys
                             // Intent gotoSurvey = new Intent(Dashboard.this, InputSurvey.class);
                             // gotoSurvey.putExtra( "surveys", timeline. );
@@ -208,9 +209,35 @@ public class Dashboard extends AppCompatActivity {
         listHeader.setVisibility(View.VISIBLE);
         listSurveys.setVisibility(View.VISIBLE);
 
+        renderSurveyCards();
+    }
+
+    private void renderSurveyCards() {
+        Log.d("RENDER SURVEY CARDS","XXX");
         // show cards
         mRecyclerView = findViewById(R.id.recyclerView);
-        // generate list by converting stored string into array
+        // get list of surveys
+        List<Survey> surveyList = getStoredSurveys();
+        // set up recycler with adapter and layout manager
+        RecyclerView.Adapter adapter = new SurveyAdapter(this, surveyList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(adapter);
+    }
+
+    private void updateSurveyCards() {
+        List<Survey> surveyList = getStoredSurveys();
+        RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
+        ((SurveyAdapter)adapter).setSurveyList(surveyList);
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+        Log.d("BANG BANG","BOOOOM");
+    }
+
+    // generate list by converting stored string into array
+    private List<Survey> getStoredSurveys() {
+        String PREF_SURVEYS = getString(R.string.pref_surveys);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        final String storedSurveys = pref.getString(PREF_SURVEYS, null);
         List<Survey> surveyList = new ArrayList<>();
         JSONArray arySurveys;
         try {
@@ -218,7 +245,6 @@ public class Dashboard extends AppCompatActivity {
         } catch (JSONException e) {
             arySurveys = new JSONArray();
         }
-
         for(int i = 0; i < arySurveys.length(); i++ ) {
             Survey s;
             try {
@@ -228,12 +254,7 @@ public class Dashboard extends AppCompatActivity {
             }
             surveyList.add(s);
         }
-
-        RecyclerView.Adapter adapter = new SurveyAdapter(this, surveyList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
+        return surveyList;
     }
 
 }
