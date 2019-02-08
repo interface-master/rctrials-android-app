@@ -99,16 +99,14 @@ public class Survey implements Serializable {
     public int getState() {
         int countQs = getQuestionsLength();
         int countAs = 0;
-        Log.d("PROCESSING Survey", String.format("ID:%d",getSurveyID()));
+        Log.d("SURVEY GETSTATE: Survey", String.format("ID:%d",getSurveyID()));
         for( int i = 0; i < this.questions.length; i++ ) {
             Answer a = this.questions[i].getAnswer();
             if( null != a ) {
-                Log.d("PROCESSING answer", a.toString());
                 countAs++;
             }
-            Log.d("PROCESSING answers", String.format("%d",countAs));
         }
-        Log.d("PROCESSING DONE",String.format("Q:%d, A:%d", countQs, countAs));
+        Log.d("SURVEY GETSTATE: DONE",String.format("Q:%d, A:%d", countQs, countAs));
         if( countAs > 0 && countQs > countAs ) {
             return Survey.INCOMPLETE;
         } else if ( countQs == countAs ) {
