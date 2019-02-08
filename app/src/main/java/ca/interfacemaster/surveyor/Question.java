@@ -16,18 +16,30 @@ public class Question implements Serializable {
 
     public Question() {}
     public Question(JSONObject obj) {
-        Log.d("Question Constructor",obj.toString());
+        Log.d("Question Constructor", obj.toString());
         try {
             this.qid = obj.getInt("qid");
-            this.text = obj.getString("text");
-            this.type = obj.getString("type");
-            this.options = obj.getString("options");
-            this.answer = null;
-        } catch(JSONException e) {
+        } catch (JSONException e) {
             this.qid = -1;
+        }
+        try {
+            this.text = obj.getString("text");
+        } catch (JSONException e) {
             this.text = "---";
+        }
+        try {
+            this.type = obj.getString("type");
+        } catch (JSONException e) {
             this.type = "text";
+        }
+        try {
+            this.options = obj.getString("options");
+        } catch (JSONException e) {
             this.options = "";
+        }
+        try {
+            this.answer = new Answer(obj.getJSONObject("answer"));
+        } catch (JSONException e) {
             this.answer = null;
         }
     }
