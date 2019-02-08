@@ -14,7 +14,7 @@
         >
 
         <Button
-            android:id="@+id/surveyTitle"
+            android:id="@+id/actionButton"
             android:gravity="start"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
