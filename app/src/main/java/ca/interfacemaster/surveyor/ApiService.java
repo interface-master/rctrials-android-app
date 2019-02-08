@@ -6,6 +6,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
+
 public class ApiService {
     private static final String BASE_URL = "http://10.0.2.2/api/";
     private static AsyncHttpClient client = new AsyncHttpClient();
@@ -21,6 +23,16 @@ public class ApiService {
         params.add("uuid",uuid);
         Log.i("dashboard","getting surveys for "+uuid+" in "+tid);
         get( "trial/"+tid+"/surveys", params, responseHandler );
+    }
+
+    public static void postSurvey(String tid, int sid, String uuid, JSONArray answers, AsyncHttpResponseHandler responseHandler) {
+        RequestParams params = new RequestParams();
+        params.add("uuid",uuid);
+        params.add("answers",answers.toString());
+        String url = String.format("trial/%s/survey/%d",tid,sid);
+        Log.d("POST SURVEY URL",url);
+        Log.d("POST BODY",params.toString());
+        post(url, params, responseHandler );
     }
 
     // private supporting functions

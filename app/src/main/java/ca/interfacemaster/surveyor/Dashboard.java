@@ -218,6 +218,7 @@ public class Dashboard extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recyclerView);
         // get list of surveys
         List<Survey> surveyList = getStoredSurveys();
+        sendCompletedSurveys(surveyList);
         // set up recycler with adapter and layout manager
         RecyclerView.Adapter adapter = new SurveyAdapter(this, surveyList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -227,10 +228,59 @@ public class Dashboard extends AppCompatActivity {
 
     private void updateSurveyCards() {
         List<Survey> surveyList = getStoredSurveys();
+        sendCompletedSurveys(surveyList);
         RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
         ((SurveyAdapter)adapter).setSurveyList(surveyList);
         mRecyclerView.getAdapter().notifyDataSetChanged();
         Log.d("BANG BANG","BOOOOM");
+    }
+
+    private void sendCompletedSurveys(List<Survey> surveyList) {
+        String PREF_TID = getString(R.string.pref_tid);
+        String PREF_UUID = getString(R.string.pref_uuid);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String storedTID = prefs.getString(PREF_TID, null);
+        String storedUUID = prefs.getString(PREF_UUID, null);
+        for( int i = 0; i < surveyList.size(); i++ ) {
+            Survey survey = surveyList.get(i);
+            if( survey.getState() == Survey.COMPLETE ) {
+                Question[] questions = survey.getQuestions();
+                JSONArray answers = new JSONArray();
+                for( int j = 0; j < questions.length; j++ ) {
+                    answers.put( questions[j].getAnswer().getJSONObject() );
+                }
+                ApiService.postSurvey(storedTID, survey.getSurveyID(), storedUUID, answers, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        // TODO: add progress spinner
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        // If the response is JSONObject instead of expected JSONArray
+                        Log.d("RESPONSE1:",response.toString());
+                        try {
+                            if (response.getBoolean("success")) {
+                                // todo: remove survey from shared prefs
+                            }
+                        } catch (JSONException e) {
+                            // todo: something about it
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.i("dashboard","failed pushing survey ("+responseString+")");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        // TODO: turn off spinner
+                    }
+                });
+            }
+        }
     }
 
     // generate list by converting stored string into array
