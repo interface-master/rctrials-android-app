@@ -92,6 +92,28 @@ public class Survey implements Serializable {
         return obj;
     }
 
+    public int getState() {
+        int countQs = getQuestionsLength();
+        int countAs = 0;
+        Log.d("PROCESSING Survey", String.format("ID:%d",getSurveyID()));
+        for( int i = 0; i < this.questions.length; i++ ) {
+            Answer a = this.questions[i].getAnswer();
+            if( null != a ) {
+                Log.d("PROCESSING answer", a.toString());
+                countAs++;
+            }
+            Log.d("PROCESSING answers", String.format("%d",countAs));
+        }
+        Log.d("PROCESSING DONE",String.format("Q:%d, A:%d", countQs, countAs));
+        if( countAs > 0 && countQs > countAs ) {
+            return 1; // incomplete
+        } else if ( countQs == countAs ) {
+            return 2; // complete
+        }
+        return 0; // default
+        // TODO: turn these ^^^ into constants !!!
+    }
+
     @Override
     public String toString() {
         String retVal = String.format("Survey [ID:%d, Title:%s, Questions:%s]", getSurveyID(), getName(), getQuestions());
