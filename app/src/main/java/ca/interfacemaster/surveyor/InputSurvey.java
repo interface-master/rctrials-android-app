@@ -141,6 +141,39 @@ public class InputSurvey extends AppCompatActivity {
         Log.d("input survey progress", String.format("%d",percent) );
     }
 
+    private void saveSurveyState() {
+        // vars
+        String PREF_SURVEYS = getString(R.string.pref_surveys);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = pref.edit();
+        String storedSurveys = pref.getString(PREF_SURVEYS, null);
+        // create json surveys
+        JSONArray jSurveys;
+        try {
+            jSurveys = new JSONArray(storedSurveys);
+        } catch (JSONException e) {
+            // todo: something about it
+            jSurveys = new JSONArray();
+        }
+
+        // look for this survey in shared prefs
+        for( int i = 0; i < jSurveys.length(); i++ ) {
+            try {
+                JSONObject s = jSurveys.getJSONObject(i);
+                if (s.getInt("sid") == survey.getSurveyID()) {
+                    // update
+                    jSurveys.put( i, survey.getJSONObject() );
+                    break;
+                }
+            } catch (JSONException e) {
+                // todo: something about it
+            }
+        }
+
+        editor.putString(PREF_SURVEYS, jSurveys.toString());
+        editor.commit();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -154,58 +187,7 @@ public class InputSurvey extends AppCompatActivity {
     @Override
     protected void onPause() {
         overridePendingTransition(R.transition.fadein, R.transition.slide_away);
+        saveSurveyState();
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        String PREF_SURVEYS = getString(R.string.pref_surveys);
-        String PREF_TID = getString(R.string.pref_tid);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = pref.edit();
-        String storedSurveys = pref.getString(PREF_SURVEYS, null);
-        String storedTID = pref.getString(PREF_TID, null);
-        JSONArray jSurveys;
-        try {
-            jSurveys = new JSONArray(storedSurveys);
-        } catch (JSONException e) {
-            // todo: something about it
-            jSurveys = new JSONArray();
-        }
-
-        Log.d("HERE jSurveys",jSurveys.toString());
-        Log.d("HERE sid", String.format("%d",survey.getSurveyID()));
-        for(int i=0; i<questions.length; i++) {
-            Log.d("HERE question", String.format("%d :: %s", i, questions[i].toString()));
-        }
-        // look for this survey in shared prefs
-//        Survey update = null;
-        for(int i=0; i<jSurveys.length(); i++) {
-            try {
-                JSONObject s = jSurveys.getJSONObject(i);
-                if (s.getInt("sid") == survey.getSurveyID()) {
-                    jSurveys.put( i, survey.getJSONObject() );
-//                    update = survey;
-                    break;
-                }
-            } catch (JSONException e) {
-                // todo: something about it
-            }
-        }
-        // update questions with answers
-//        if( update != null ) {
-//            Log.d("UPDATE THIS",update.toString() );
-//        }
-
-        editor.putString(PREF_SURVEYS, jSurveys.toString());
-        editor.commit();
-
-//        Log.d("DESTROY SURVEY save:", String.format("Answers: %d",answers.length));
-//        for(int i=0; i<answers.length; i++ ) {
-//            if( answers[i] != null ) {
-//                Log.d("answer", String.format("i:%d a:%s", i, answers[i].getAnswer()));
-//            }
-//        }
-        super.onDestroy();
     }
 }
