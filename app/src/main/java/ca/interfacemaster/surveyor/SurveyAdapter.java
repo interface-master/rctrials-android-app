@@ -18,11 +18,11 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
     private List<Survey> surveyList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public Button title;
+        public Button action;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.surveyTitle);
+            action = itemView.findViewById(R.id.actionButton);
             // TODO: add more details to card
         }
     }
