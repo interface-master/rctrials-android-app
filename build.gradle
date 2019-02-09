@@ -20,6 +20,11 @@ allprojects {
         google()
         jcenter()
     }
+    // NOTE: The following code allows the project to compile when getting deprecation warning
+    //tasks.withType(JavaCompile) {
+    //    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    //    options.compilerArgs << "-Xlint:deprecation"
+    //}
 }
 
 task clean(type: Delete) {
