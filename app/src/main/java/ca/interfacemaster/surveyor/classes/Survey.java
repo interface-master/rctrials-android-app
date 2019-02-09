@@ -1,4 +1,4 @@
-package ca.interfacemaster.surveyor;
+package ca.interfacemaster.surveyor.classes;
 
 import android.util.Log;
 

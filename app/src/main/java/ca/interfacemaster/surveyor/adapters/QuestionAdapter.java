@@ -1,4 +1,4 @@
-package ca.interfacemaster.surveyor;
+package ca.interfacemaster.surveyor.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
+import ca.interfacemaster.surveyor.R;
 import ca.interfacemaster.surveyor.classes.Question;
 
 public class QuestionAdapter extends BaseAdapter {

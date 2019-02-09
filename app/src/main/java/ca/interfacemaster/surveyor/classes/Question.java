@@ -1,4 +1,4 @@
-package ca.interfacemaster.surveyor;
+package ca.interfacemaster.surveyor.classes;
 
 import android.util.Log;
 
@@ -6,6 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+
+import ca.interfacemaster.surveyor.classes.Answer;
 
 public class Question implements Serializable {
     private int qid;

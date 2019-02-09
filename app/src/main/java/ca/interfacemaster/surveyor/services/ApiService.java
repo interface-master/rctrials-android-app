@@ -1,4 +1,4 @@
-package ca.interfacemaster.surveyor.service;
+package ca.interfacemaster.surveyor.services;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
