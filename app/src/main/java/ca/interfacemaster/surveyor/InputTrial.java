@@ -1,6 +1,5 @@
 package ca.interfacemaster.surveyor;
 
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,16 +16,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ca.interfacemaster.surveyor.service.ApiService;
+import ca.interfacemaster.surveyor.services.ApiService;
+import ca.interfacemaster.surveyor.services.SharedPrefService;
 import cz.msebera.android.httpclient.Header;
 
 public class InputTrial extends AppCompatActivity {
+    private SharedPrefService pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_trial);
-
+        // services
+        pref = new SharedPrefService(this);
+        // view
         configureRegisterButton();
     }
 
@@ -59,13 +62,10 @@ public class InputTrial extends AppCompatActivity {
                         if(!uuid.isEmpty()) {
                             bar.setProgress(100);
                             log.setText(getString(R.string.registered));
-                            // save UUID
-                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(InputTrial.this);
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString(getString(R.string.pref_tid), tid);
-                            editor.putString(getString(R.string.pref_uuid), uuid);
-                            editor.putString(getString(R.string.pref_surveys), surveys.toString());
-                            editor.commit();
+                            // save TID and UUID
+                            pref.updateTID(tid);
+                            pref.updateUUID(uuid);
+                            pref.updateSurveys(surveys);
                             // TODO: goto survey view to process pre-test surveys
                             Log.d("InputTrial",response.getString("surveys"));
                             // finished

@@ -30,17 +30,25 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.interfacemaster.surveyor.service.ApiService;
+import ca.interfacemaster.surveyor.adapters.SurveyAdapter;
+import ca.interfacemaster.surveyor.classes.Question;
+import ca.interfacemaster.surveyor.classes.Survey;
+import ca.interfacemaster.surveyor.services.ApiService;
+import ca.interfacemaster.surveyor.services.SharedPrefService;
 import cz.msebera.android.httpclient.Header;
 
 public class Dashboard extends AppCompatActivity {
 
     public static RecyclerView mRecyclerView;
     private DrawerLayout mDrawerLayout;
+    private SharedPrefService pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // services
+        pref = new SharedPrefService(this);
+        // view
         setupView();
         setupNav();
         checkConfig();
@@ -100,10 +108,7 @@ public class Dashboard extends AppCompatActivity {
      * Checks for presence of TID and UUID and configures the view accordingly.
      */
     private void checkConfig() {
-        String PREF_TID = getString(R.string.pref_tid);
-        String PREF_UUID = getString(R.string.pref_uuid);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        if( pref.contains(PREF_TID) && pref.contains(PREF_UUID) ) {
+        if( pref.contains(pref.PREF_TID) && pref.contains(pref.PREF_UUID) ) {
             configureSurveys();
         } else {
             configureSetUpButton();
@@ -139,16 +144,11 @@ public class Dashboard extends AppCompatActivity {
      */
     private void configureSurveys() {
         // refs
-        String PREF_TID = getString(R.string.pref_tid);
-        String PREF_UUID = getString(R.string.pref_uuid);
         TextView header = findViewById(R.id.textDashboardHeader);
         TextView subHeader = findViewById(R.id.textDashboardSubHeader);
         Button button = findViewById(R.id.buttonSetUpTID);
         TextView listHeader = findViewById(R.id.textAvailableSurveys);
         View listSurveys = findViewById(R.id.includeListSurveys);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        final String storedTID = prefs.getString(PREF_TID, null);
-        final String storedUUID = prefs.getString(PREF_UUID, null);
         // text
         header.setText(getString(R.string.welcome_header));
         subHeader.setText(getString(R.string.registered_sub_header));
@@ -158,7 +158,7 @@ public class Dashboard extends AppCompatActivity {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ApiService.queryForSurveys(storedTID, storedUUID, new JsonHttpResponseHandler() {
+                    ApiService.queryForSurveys(pref.getTID(), pref.getUUID(), new JsonHttpResponseHandler() {
                         @Override
                         public void onStart() {
                             // TODO: add progress spinner
@@ -178,12 +178,7 @@ public class Dashboard extends AppCompatActivity {
                             Log.d("dashboard bundle", bundle.toString());
                             Log.d("dashboard timeline",timeline.toString());
 
-                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Dashboard.this);
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString(getString(R.string.pref_surveys), timeline.toString());
-                            editor.commit();
-
-
+                            pref.updateSurveys(timeline);
 
                             // TODO: goto survey view to process surveys
                             // Intent gotoSurvey = new Intent(Dashboard.this, InputSurvey.class);
@@ -214,11 +209,10 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void renderSurveyCards() {
-        Log.d("RENDER SURVEY CARDS","XXX");
-        // show cards
+        Log.d("DASHBOARD", "renderSurveyCards: RENDERING");
         mRecyclerView = findViewById(R.id.recyclerView);
         // get list of surveys
-        List<Survey> surveyList = getStoredSurveys();
+        List<Survey> surveyList = pref.getSurveyList();
         sendCompletedSurveys(surveyList);
         // set up recycler with adapter and layout manager
         RecyclerView.Adapter adapter = new SurveyAdapter(this, surveyList);
@@ -228,29 +222,24 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void updateSurveyCards() {
-        List<Survey> surveyList = getStoredSurveys();
+        List<Survey> surveyList = pref.getSurveyList();
         sendCompletedSurveys(surveyList);
         RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
         ((SurveyAdapter)adapter).setSurveyList(surveyList);
         mRecyclerView.getAdapter().notifyDataSetChanged();
-        Log.d("BANG BANG","BOOOOM");
+        Log.d("DASHBOARD","updateSurveyCards: UPDATED");
     }
 
     private void sendCompletedSurveys(List<Survey> surveyList) {
-        String PREF_TID = getString(R.string.pref_tid);
-        String PREF_UUID = getString(R.string.pref_uuid);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String storedTID = prefs.getString(PREF_TID, null);
-        String storedUUID = prefs.getString(PREF_UUID, null);
         for( int i = 0; i < surveyList.size(); i++ ) {
-            Survey survey = surveyList.get(i);
+            final Survey survey = surveyList.get(i);
             if( survey.getState() == Survey.COMPLETE ) {
                 Question[] questions = survey.getQuestions();
                 JSONArray answers = new JSONArray();
                 for( int j = 0; j < questions.length; j++ ) {
                     answers.put( questions[j].getAnswer().getJSONObject() );
                 }
-                ApiService.postSurvey(storedTID, survey.getSurveyID(), storedUUID, answers, new JsonHttpResponseHandler() {
+                ApiService.postSurvey(pref.getTID(), survey.getSurveyID(), pref.getUUID(), answers, new JsonHttpResponseHandler() {
                     @Override
                     public void onStart() {
                         // TODO: add progress spinner
@@ -263,6 +252,8 @@ public class Dashboard extends AppCompatActivity {
                         try {
                             if (response.getBoolean("success")) {
                                 // todo: remove survey from shared prefs
+                                pref.removeSurvey(survey);
+                                updateSurveyCards();
                             }
                         } catch (JSONException e) {
                             // todo: something about it
@@ -283,29 +274,4 @@ public class Dashboard extends AppCompatActivity {
             }
         }
     }
-
-    // generate list by converting stored string into array
-    private List<Survey> getStoredSurveys() {
-        String PREF_SURVEYS = getString(R.string.pref_surveys);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        final String storedSurveys = pref.getString(PREF_SURVEYS, null);
-        List<Survey> surveyList = new ArrayList<>();
-        JSONArray arySurveys;
-        try {
-            arySurveys = new JSONArray(storedSurveys);
-        } catch (JSONException e) {
-            arySurveys = new JSONArray();
-        }
-        for(int i = 0; i < arySurveys.length(); i++ ) {
-            Survey s;
-            try {
-                s = new Survey((JSONObject) arySurveys.get(i));
-            } catch (JSONException e) {
-                s = new Survey();
-            }
-            surveyList.add(s);
-        }
-        return surveyList;
-    }
-
 }

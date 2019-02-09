@@ -1,6 +1,5 @@
 package ca.interfacemaster.surveyor;
 
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -23,17 +22,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ca.interfacemaster.surveyor.adapters.QuestionAdapter;
+import ca.interfacemaster.surveyor.classes.Answer;
+import ca.interfacemaster.surveyor.classes.Question;
+import ca.interfacemaster.surveyor.classes.Survey;
+import ca.interfacemaster.surveyor.services.SharedPrefService;
+
 public class InputSurvey extends AppCompatActivity {
     private static Survey survey;
     private static Question[] questions;
     private static Answer[] answers;
     private DrawerLayout mDrawerLayout;
     private AdapterViewFlipper mAdapterViewFlipper;
+    private SharedPrefService pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.transition.slide_over, R.transition.fadeout);
+        // services
+        pref = new SharedPrefService(this);
         // extract survey
         Bundle extras = getIntent().getExtras();
         survey = (Survey) extras.getSerializable("survey");
@@ -141,39 +149,6 @@ public class InputSurvey extends AppCompatActivity {
         Log.d("input survey progress", String.format("%d",percent) );
     }
 
-    private void saveSurveyState() {
-        // vars
-        String PREF_SURVEYS = getString(R.string.pref_surveys);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = pref.edit();
-        String storedSurveys = pref.getString(PREF_SURVEYS, null);
-        // create json surveys
-        JSONArray jSurveys;
-        try {
-            jSurveys = new JSONArray(storedSurveys);
-        } catch (JSONException e) {
-            // todo: something about it
-            jSurveys = new JSONArray();
-        }
-
-        // look for this survey in shared prefs
-        for( int i = 0; i < jSurveys.length(); i++ ) {
-            try {
-                JSONObject s = jSurveys.getJSONObject(i);
-                if (s.getInt("sid") == survey.getSurveyID()) {
-                    // update
-                    jSurveys.put( i, survey.getJSONObject() );
-                    break;
-                }
-            } catch (JSONException e) {
-                // todo: something about it
-            }
-        }
-
-        editor.putString(PREF_SURVEYS, jSurveys.toString());
-        editor.commit();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -187,7 +162,7 @@ public class InputSurvey extends AppCompatActivity {
     @Override
     protected void onPause() {
         overridePendingTransition(R.transition.fadein, R.transition.slide_away);
-        saveSurveyState();
+        pref.updateSurvey(survey);
         super.onPause();
     }
 }
