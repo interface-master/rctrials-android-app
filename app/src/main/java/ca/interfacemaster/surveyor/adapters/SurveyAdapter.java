@@ -1,8 +1,9 @@
-package ca.interfacemaster.surveyor;
+package ca.interfacemaster.surveyor.adapters;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,9 @@ import android.widget.Button;
 
 import java.util.List;
 
+import ca.interfacemaster.surveyor.Dashboard;
+import ca.interfacemaster.surveyor.InputSurvey;
+import ca.interfacemaster.surveyor.R;
 import ca.interfacemaster.surveyor.classes.Survey;
 
 public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHolder> {
@@ -58,13 +62,13 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
         final Survey survey = surveyList.get(position);
         holder.action.setText(survey.getName());
         // set icon based on survey answer state
-        Drawable icon = mContext.getResources().getDrawable(R.drawable.ic_assignment_black);
+        Drawable icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_black);
         switch (survey.getState()) {
             case 1:
-                icon = mContext.getResources().getDrawable(R.drawable.ic_assignment_late_black);
+                icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_late_black);
                 break;
             case 2:
-                icon = mContext.getResources().getDrawable(R.drawable.ic_assignment_turned_in_black);
+                icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_turned_in_black);
                 break;
         }
         holder.action.setCompoundDrawablesWithIntrinsicBounds(null,null, icon, null);
