@@ -12,6 +12,8 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
+import ca.interfacemaster.surveyor.classes.Question;
+
 public class QuestionAdapter extends BaseAdapter {
     private Context mContext;
     private List<Question> questionList;

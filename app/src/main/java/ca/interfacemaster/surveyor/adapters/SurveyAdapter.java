@@ -5,14 +5,14 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.List;
+
+import ca.interfacemaster.surveyor.classes.Survey;
 
 public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHolder> {
 
