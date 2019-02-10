@@ -161,8 +161,10 @@ public class Dashboard extends AppCompatActivity {
                     ApiService.queryForSurveys(pref.getTID(), pref.getUUID(), new JsonHttpResponseHandler() {
                         @Override
                         public void onStart() {
-                            // TODO: add progress spinner
                             Log.d("DASHBOARD","bleep bloop querying surveys /"+pref.getTID()+"/"+pref.getUUID());
+                            findViewById(R.id.textAvailableSurveys).setVisibility(View.INVISIBLE);
+                            findViewById(R.id.includeListSurveys).setVisibility(View.INVISIBLE);
+                            findViewById(R.id.spinnerSurveyList).setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -197,8 +199,10 @@ public class Dashboard extends AppCompatActivity {
 
                         @Override
                         public void onFinish() {
+                            findViewById(R.id.spinnerSurveyList).setVisibility(View.INVISIBLE);
+                            findViewById(R.id.textAvailableSurveys).setVisibility(View.VISIBLE);
+                            findViewById(R.id.includeListSurveys).setVisibility(View.VISIBLE);
                             super.onFinish();
-                            // TODO: turn off spinner
                         }
                     });
                 }
