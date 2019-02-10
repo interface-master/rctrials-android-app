@@ -212,7 +212,15 @@ public class Dashboard extends AppCompatActivity {
 
     private void renderSurveyCards() {
         Log.d("DASHBOARD", "renderSurveyCards: RENDERING");
+        // refs
         mRecyclerView = findViewById(R.id.recyclerView);
+        TextView header = findViewById(R.id.textAvailableSurveys);
+        // header
+        if(pref.getSurveyList().size() == 0) {
+            header.setText(getText(R.string.no_available_surveys));
+        } else {
+            header.setText(getText(R.string.available_surveys));
+        }
         // get list of surveys
         List<Survey> surveyList = pref.getSurveyList();
         sendCompletedSurveys(surveyList);
@@ -224,7 +232,16 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void updateSurveyCards() {
+        // refs
         List<Survey> surveyList = pref.getSurveyList();
+        TextView header = findViewById(R.id.textAvailableSurveys);
+        // header
+        if(pref.getSurveyList().size() == 0) {
+            header.setText(getText(R.string.no_available_surveys));
+        } else {
+            header.setText(getText(R.string.available_surveys));
+        }
+        // cards
         sendCompletedSurveys(surveyList);
         RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
         ((SurveyAdapter)adapter).setSurveyList(surveyList);

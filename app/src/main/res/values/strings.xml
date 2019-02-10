@@ -12,6 +12,8 @@
     <string name="registering">Registering</string>
     <string name="registered_sub_header">Press the button below to check for available surveys.</string>
     <string name="registered_check">Check</string>
+    <string name="available_surveys">Available Surveys</string>
+    <string name="no_available_surveys">No Available Surveys</string>
 
     <string name="welcome_header">Welcome</string>
     <string name="welcome_set_up">Set Up</string>
