@@ -8,10 +8,11 @@
     android:fitsSystemWindows="true"
     >
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
         <android.support.v7.widget.Toolbar
@@ -23,14 +24,14 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             />
 
-        <include
+        <!--<include
+            android:id="@+id/includeMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="?attr/actionBarSize"
-            layout="@layout/activity_dashboard"
-            />
+            />-->
 
-    </FrameLayout>
+    </LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

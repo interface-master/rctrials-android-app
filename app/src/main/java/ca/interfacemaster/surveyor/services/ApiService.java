@@ -1,10 +1,10 @@
-package ca.interfacemaster.surveyor;
-
-import android.util.Log;
+package ca.interfacemaster.surveyor.services;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
 
 public class ApiService {
     private static final String BASE_URL = "http://10.0.2.2/api/";
@@ -13,14 +13,23 @@ public class ApiService {
     // public api functions
 
     public static void registerIntoTrial(String tid, AsyncHttpResponseHandler responseHandler) {
-        post( "register/"+tid, null, responseHandler);
+        String url = String.format("register/%s",tid);
+        post(url, null, responseHandler);
     }
 
     public static void queryForSurveys(String tid, String uuid, AsyncHttpResponseHandler responseHandler) {
         RequestParams params = new RequestParams();
         params.add("uuid",uuid);
-        Log.i("dashboard","getting surveys for "+uuid+" in "+tid);
-        get( "trial/"+tid+"/surveys", params, responseHandler );
+        String url = String.format("trial/%s/surveys",tid);
+        get(url, params, responseHandler);
+    }
+
+    public static void postSurvey(String tid, int sid, String uuid, JSONArray answers, AsyncHttpResponseHandler responseHandler) {
+        RequestParams params = new RequestParams();
+        params.add("uuid",uuid);
+        params.add("answers",answers.toString());
+        String url = String.format("trial/%s/survey/%d",tid,sid);
+        post(url, params, responseHandler);
     }
 
     // private supporting functions
