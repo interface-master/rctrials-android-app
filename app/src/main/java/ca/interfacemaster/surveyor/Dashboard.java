@@ -162,6 +162,7 @@ public class Dashboard extends AppCompatActivity {
                         @Override
                         public void onStart() {
                             // TODO: add progress spinner
+                            Log.d("DASHBOARD","bleep bloop querying surveys /"+pref.getTID()+"/"+pref.getUUID());
                         }
 
                         @Override
@@ -179,6 +180,7 @@ public class Dashboard extends AppCompatActivity {
                             Log.d("dashboard timeline",timeline.toString());
 
                             pref.updateSurveys(timeline);
+                            updateSurveyCards();
 
                             // TODO: goto survey view to process surveys
                             // Intent gotoSurvey = new Intent(Dashboard.this, InputSurvey.class);
