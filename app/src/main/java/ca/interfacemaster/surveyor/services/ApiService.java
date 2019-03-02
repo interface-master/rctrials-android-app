@@ -7,7 +7,8 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 
 public class ApiService {
-    private static final String BASE_URL = "http://10.0.2.2/api/";
+//    private static final String BASE_URL = "http://10.0.2.2/api/"; // localhost when running through emulator
+    private static final String BASE_URL = "http://rctrials.tk/api/"; // rctrials.tk server // TODO: switch to HTTPS
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     // public api functions

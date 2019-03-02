@@ -161,7 +161,10 @@ public class Dashboard extends AppCompatActivity {
                     ApiService.queryForSurveys(pref.getTID(), pref.getUUID(), new JsonHttpResponseHandler() {
                         @Override
                         public void onStart() {
-                            // TODO: add progress spinner
+                            Log.d("DASHBOARD","bleep bloop querying surveys /"+pref.getTID()+"/"+pref.getUUID());
+                            findViewById(R.id.textAvailableSurveys).setVisibility(View.INVISIBLE);
+                            findViewById(R.id.includeListSurveys).setVisibility(View.INVISIBLE);
+                            findViewById(R.id.spinnerSurveyList).setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -179,6 +182,7 @@ public class Dashboard extends AppCompatActivity {
                             Log.d("dashboard timeline",timeline.toString());
 
                             pref.updateSurveys(timeline);
+                            updateSurveyCards();
 
                             // TODO: goto survey view to process surveys
                             // Intent gotoSurvey = new Intent(Dashboard.this, InputSurvey.class);
@@ -195,8 +199,10 @@ public class Dashboard extends AppCompatActivity {
 
                         @Override
                         public void onFinish() {
+                            findViewById(R.id.spinnerSurveyList).setVisibility(View.INVISIBLE);
+                            findViewById(R.id.textAvailableSurveys).setVisibility(View.VISIBLE);
+                            findViewById(R.id.includeListSurveys).setVisibility(View.VISIBLE);
                             super.onFinish();
-                            // TODO: turn off spinner
                         }
                     });
                 }
@@ -210,7 +216,15 @@ public class Dashboard extends AppCompatActivity {
 
     private void renderSurveyCards() {
         Log.d("DASHBOARD", "renderSurveyCards: RENDERING");
+        // refs
         mRecyclerView = findViewById(R.id.recyclerView);
+        TextView header = findViewById(R.id.textAvailableSurveys);
+        // header
+        if(pref.getSurveyList().size() == 0) {
+            header.setText(getText(R.string.no_available_surveys));
+        } else {
+            header.setText(getText(R.string.available_surveys));
+        }
         // get list of surveys
         List<Survey> surveyList = pref.getSurveyList();
         sendCompletedSurveys(surveyList);
@@ -222,7 +236,16 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void updateSurveyCards() {
+        // refs
         List<Survey> surveyList = pref.getSurveyList();
+        TextView header = findViewById(R.id.textAvailableSurveys);
+        // header
+        if(pref.getSurveyList().size() == 0) {
+            header.setText(getText(R.string.no_available_surveys));
+        } else {
+            header.setText(getText(R.string.available_surveys));
+        }
+        // cards
         sendCompletedSurveys(surveyList);
         RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
         ((SurveyAdapter)adapter).setSurveyList(surveyList);
