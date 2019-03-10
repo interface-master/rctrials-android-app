@@ -28,7 +28,7 @@ public class Answer implements Serializable {
         try {
             this.answer = obj.getString("answer");
         } catch(JSONException e) {
-            this.answer = "---";
+            this.answer = "";
         }
     }
 

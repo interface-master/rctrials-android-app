@@ -12,9 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterViewFlipper;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -108,11 +111,39 @@ public class InputSurvey extends AppCompatActivity {
         // save answer
         Answer answer = new Answer(q.getQuestionID());
         if (q.getType().equalsIgnoreCase("text")) {
-            EditText ans1 = v.findViewById(R.id.editTextAnswer);
-            answer.setAnswer(ans1.getText().toString());
-        } else if (q.getType().equalsIgnoreCase("mc")) {
-            SeekBar ans2 = v.findViewById(R.id.sliderAnswer);
-            answer.setAnswer("" + ans2.getProgress());
+            // text input
+            EditText ans = v.findViewById(R.id.editTextAnswer);
+            answer.setAnswer(ans.getText().toString());
+
+        } else if (q.getType().equalsIgnoreCase("likert")) {
+            // slider input
+            SeekBar ans = v.findViewById(R.id.sliderAnswer);
+            answer.setAnswer("" + q.getOptions()[ans.getProgress()]);
+
+        } else if (q.getType().equalsIgnoreCase("slider")) {
+            // slider input
+            SeekBar ans = v.findViewById(R.id.sliderAnswer);
+            int ansValue = Integer.parseInt(q.getOptions()[0]) + ans.getProgress();
+            answer.setAnswer("" + ansValue);
+
+        } else if (q.getType().equalsIgnoreCase("radio")) {
+            // radio buttons
+            RadioGroup ansGroup = v.findViewById(R.id.radioAnswer);
+            RadioButton ans = findViewById( ansGroup.getCheckedRadioButtonId() );
+            answer.setAnswer("" + ans.getText());
+
+        } else if (q.getType().equalsIgnoreCase("check")) {
+            // check boxes
+            String ans = "";
+            RadioGroup ansGroup = v.findViewById(R.id.radioAnswer);
+            for( int i = 0; i < ansGroup.getChildCount(); i++ ) {
+                CheckBox child = (CheckBox)ansGroup.getChildAt(i);
+                if( child.isChecked() ) {
+                    if (!ans.isEmpty()) ans = ans + "|";
+                    ans = ans + child.getText();
+                }
+            }
+            answer.setAnswer("" + ans);
         }
         answers[pos] = answer;
         q.setAnswer(answer);

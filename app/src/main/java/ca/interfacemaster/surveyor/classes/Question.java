@@ -63,7 +63,40 @@ public class Question implements Serializable {
     }
 
     public String[] getOptions() {
-        return this.options.split("\\|");
+        if( this.options.indexOf("|") > 0 ) {
+            // array delimited by pipe "|"
+            return this.options.trim().split("\\s*\\|\\s*");
+        } else if( this.options.indexOf("..") > 0 ) {
+            // range delimited by double dot ".."
+            int min, max;
+            try {
+                min = Integer.parseInt(this.options.split("\\.\\.")[0].trim());
+            } catch( NullPointerException e ) {
+                min = 0;
+            }
+            try {
+                max = Integer.parseInt(this.options.split("\\.\\.")[1].trim());
+            } catch( NullPointerException e ) {
+                max = 10;
+            }
+            String range[] = new String[(1+max-min)];
+            for( int i = min; i <= max; i++ ) {
+                range[i-min] = String.valueOf(i);
+            }
+            return range;
+        } else {
+            return new String[0];
+        }
+    }
+
+    public int getOptionIndex(String opt) {
+        String[] opts = this.getOptions();
+        for( int i = 0; i < opts.length; i++ ) {
+            if( opts[i].equalsIgnoreCase(opt) ) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void setAnswer(Answer ans) {
@@ -80,20 +113,31 @@ public class Question implements Serializable {
         }
     }
     public int getAnswerVal() {
-        if( this.type.equalsIgnoreCase("mc") ) {
+        if(
+            this.type.equalsIgnoreCase("slider")
+            ||
+            this.type.equalsIgnoreCase("likert")
+            ||
+            this.type.equalsIgnoreCase("radio")
+            ||
+            this.type.equalsIgnoreCase("check")
+        ) {
+            int idx = this.getOptionIndex(this.answer.getAnswer());
+            if( idx > -1 ) {
+                return idx;
+            }
             return Integer.parseInt(this.answer.getAnswer());
+
+            // TODO: handle the range out of bounds exception
+            // when answer doesn't match the options
+            // return this.getOptions()[ Integer.parseInt(this.answer.getAnswer()) ];
+
         }
         return -1;
     }
     public String getAnswerText() {
         if( this.answer != null ) {
-            if(this.type.equalsIgnoreCase("text")) {
-                return this.answer.getAnswer();
-            } else if(this.type.equalsIgnoreCase("mc")) {
-                // TODO: handle the range out of bounds exception
-                // when answer doesn't match the options
-                return this.getOptions()[ Integer.parseInt(this.answer.getAnswer()) ];
-            }
+            return this.answer.getAnswer();
         }
         return "NULL";
     }

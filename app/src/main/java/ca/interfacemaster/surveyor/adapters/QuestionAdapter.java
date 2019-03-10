@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -49,15 +52,15 @@ public class QuestionAdapter extends BaseAdapter {
 
         // refs
         final Question q = questionList.get(position);
+        final String[] opts = q.getOptions();
         final TextView question = convertView.findViewById(R.id.textQuestion);
-        final EditText answer = convertView.findViewById(R.id.editTextAnswer);
-        final SeekBar slider = convertView.findViewById(R.id.sliderAnswer);
-        final TextView tooltip = convertView.findViewById(R.id.sliderTooltip);
+        final RadioGroup radioGroup = convertView.findViewById(R.id.radioAnswer);
         // confs
         question.setText(q.getText());
         // type
         switch (q.getType()) {
             case "text":
+                final EditText answer = convertView.findViewById(R.id.editTextAnswer);
                 answer.setVisibility(View.VISIBLE);
                 answer.setHorizontallyScrolling(false);
                 answer.setLines(3);
@@ -65,8 +68,11 @@ public class QuestionAdapter extends BaseAdapter {
                     answer.setText( q.getAnswerText() );
                 }
                 break;
-            case "mc":
-                final String[] opts = q.getOptions();
+
+            case "likert":
+            case "slider":
+                final SeekBar slider = convertView.findViewById(R.id.sliderAnswer);
+                final TextView tooltip = convertView.findViewById(R.id.sliderTooltip);
                 tooltip.setText(opts[0]);
                 tooltip.setVisibility(View.VISIBLE);
                 if(q.hasAnswer()) {
@@ -92,6 +98,33 @@ public class QuestionAdapter extends BaseAdapter {
                     }
                 });
                 break;
+
+            case "radio": // one-of-many (radio buttons)
+                for( int i = 0; i < opts.length-1; i++ ) {
+                    RadioButton r = new RadioButton(mContext);
+                    r.setText(opts[i]);
+                    radioGroup.addView(r);
+                    if(q.hasAnswer() && q.getAnswerText().equalsIgnoreCase(opts[i])) {
+                        radioGroup.check( r.getId() );
+                    }
+                }
+                break;
+            case "check": // many-of-many (check boxes)
+                for( int i = 0; i < opts.length-1; i++ ) {
+                    CheckBox c = new CheckBox(mContext);
+                    c.setText(opts[i]);
+                    if(q.hasAnswer()) {
+                        String[] selected = q.getAnswerText().trim().split("\\s*\\|\\s*");
+                        for( int j = 0; j < selected.length; j++ ) {
+                            if( selected[j].equalsIgnoreCase(opts[i]) ) {
+                                c.setChecked(true);
+                            }
+                        }
+                    }
+                    radioGroup.addView(c);
+                }
+                break;
+
         }
 
 
