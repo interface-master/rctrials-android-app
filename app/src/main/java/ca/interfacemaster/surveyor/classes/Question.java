@@ -122,11 +122,14 @@ public class Question implements Serializable {
             ||
             this.type.equalsIgnoreCase("check")
         ) {
-            int idx = this.getOptionIndex(this.answer.getAnswer());
+            String ans = this.answer.getAnswer();
+            int idx = this.getOptionIndex(ans);
             if( idx > -1 ) {
                 return idx;
             }
-            return Integer.parseInt(this.answer.getAnswer());
+
+            return -1;
+            // return Integer.parseInt(ans);
 
             // TODO: handle the range out of bounds exception
             // when answer doesn't match the options
