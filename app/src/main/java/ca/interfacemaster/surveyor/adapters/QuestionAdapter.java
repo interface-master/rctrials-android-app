@@ -1,6 +1,10 @@
 package ca.interfacemaster.surveyor.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,13 +77,17 @@ public class QuestionAdapter extends BaseAdapter {
             case "slider":
                 final SeekBar slider = convertView.findViewById(R.id.sliderAnswer);
                 final TextView tooltip = convertView.findViewById(R.id.sliderTooltip);
-                tooltip.setText(opts[0]);
+                tooltip.setText("");
                 tooltip.setVisibility(View.VISIBLE);
-                if(q.hasAnswer()) {
-                    slider.setProgress(q.getAnswerVal());
-                    tooltip.setText(q.getAnswerText());
-                }
                 slider.setMax(opts.length-1);
+                if(q.hasAnswer() && !q.getAnswerText().equalsIgnoreCase("")) {
+                    tooltip.setText(q.getAnswerText());
+                    slider.setProgress(q.getAnswerVal());
+                    slider.setThumb( convertView.getResources().getDrawable(R.drawable.custom_slider_thumb) );
+                } else {
+                    slider.setProgress(-1);
+                    slider.setThumb( convertView.getResources().getDrawable(R.drawable.custom_slider_thumb_blank) );
+                }
                 slider.setVisibility(View.VISIBLE);
                 slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
@@ -90,6 +98,7 @@ public class QuestionAdapter extends BaseAdapter {
                     @Override
                     public void onStartTrackingTouch(SeekBar seekBar) {
                         // track start
+                        seekBar.setThumb( seekBar.getResources().getDrawable(R.drawable.custom_slider_thumb) );
                     }
 
                     @Override
