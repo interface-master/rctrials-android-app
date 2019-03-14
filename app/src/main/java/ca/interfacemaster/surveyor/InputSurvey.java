@@ -118,19 +118,34 @@ public class InputSurvey extends AppCompatActivity {
         } else if (q.getType().equalsIgnoreCase("likert")) {
             // slider input
             SeekBar ans = v.findViewById(R.id.sliderAnswer);
-            answer.setAnswer("" + q.getOptions()[ans.getProgress()]);
+            if( ans.isDirty() ) {
+                answer.setAnswer("" + q.getOptions()[ans.getProgress()]);
+            } else {
+                answer.setAnswer("");
+            }
 
         } else if (q.getType().equalsIgnoreCase("slider")) {
             // slider input
             SeekBar ans = v.findViewById(R.id.sliderAnswer);
-            int ansValue = Integer.parseInt(q.getOptions()[0]) + ans.getProgress();
+            String ansValue = "";
+            if( ans.isDirty() ) {
+                try {
+                    int ansIntVal = Integer.parseInt(q.getOptions()[0]);
+                    ansIntVal += ans.getProgress();
+                    ansValue = String.format("%d", ansIntVal);
+                } catch (NumberFormatException e) {
+                    ansValue = q.getOptions()[0];
+                }
+            }
             answer.setAnswer("" + ansValue);
 
         } else if (q.getType().equalsIgnoreCase("radio")) {
             // radio buttons
             RadioGroup ansGroup = v.findViewById(R.id.radioAnswer);
             RadioButton ans = findViewById( ansGroup.getCheckedRadioButtonId() );
-            answer.setAnswer("" + ans.getText());
+            if( ans != null ) {
+                answer.setAnswer("" + ans.getText());
+            }
 
         } else if (q.getType().equalsIgnoreCase("check")) {
             // check boxes
