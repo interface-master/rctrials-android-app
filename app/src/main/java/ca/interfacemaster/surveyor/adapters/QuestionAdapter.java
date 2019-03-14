@@ -109,7 +109,7 @@ public class QuestionAdapter extends BaseAdapter {
                 break;
 
             case "radio": // one-of-many (radio buttons)
-                for( int i = 0; i < opts.length-1; i++ ) {
+                for( int i = 0; i < opts.length; i++ ) {
                     RadioButton r = new RadioButton(mContext);
                     r.setText(opts[i]);
                     radioGroup.addView(r);
@@ -119,7 +119,7 @@ public class QuestionAdapter extends BaseAdapter {
                 }
                 break;
             case "check": // many-of-many (check boxes)
-                for( int i = 0; i < opts.length-1; i++ ) {
+                for( int i = 0; i < opts.length; i++ ) {
                     CheckBox c = new CheckBox(mContext);
                     c.setText(opts[i]);
                     if(q.hasAnswer()) {
