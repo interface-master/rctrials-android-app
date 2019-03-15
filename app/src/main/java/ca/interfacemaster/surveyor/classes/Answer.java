@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class Answer implements Serializable {
     private int qid; // question ID
     private String answer;
+    private boolean dirty = false;
 
     public Answer(int qid) {
         this.qid = qid;
@@ -19,6 +20,12 @@ public class Answer implements Serializable {
 //        this.qid = qid;
 //        this.answer = answer;
 //    }
+
+    public Answer(int qid, boolean dirty) {
+        this.qid = qid;
+        this.dirty = dirty;
+    }
+
     public Answer(JSONObject obj) {
         try {
             this.qid = obj.getInt("qid");
@@ -41,6 +48,13 @@ public class Answer implements Serializable {
     }
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public boolean isDirty() {
+        return this.dirty;
+    }
+    public void markAsDirty() {
+        this.dirty = true;
     }
 
     public JSONObject getJSONObject() {

@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ca.interfacemaster.surveyor.R;
+import ca.interfacemaster.surveyor.classes.Answer;
 import ca.interfacemaster.surveyor.classes.Question;
 
 public class QuestionAdapter extends BaseAdapter {
@@ -99,6 +100,11 @@ public class QuestionAdapter extends BaseAdapter {
                     public void onStartTrackingTouch(SeekBar seekBar) {
                         // track start
                         seekBar.setThumb( seekBar.getResources().getDrawable(R.drawable.custom_slider_thumb) );
+                        if( q.hasAnswer() ) {
+                            q.getAnswer().markAsDirty();
+                        } else {
+                            q.setAnswer( new Answer(q.getQuestionID(),true) );
+                        }
                     }
 
                     @Override
