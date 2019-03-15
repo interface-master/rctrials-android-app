@@ -34,7 +34,6 @@ import ca.interfacemaster.surveyor.services.SharedPrefService;
 public class InputSurvey extends AppCompatActivity {
     private static Survey survey;
     private static Question[] questions;
-    private static Answer[] answers;
     private DrawerLayout mDrawerLayout;
     private AdapterViewFlipper mAdapterViewFlipper;
     private SharedPrefService pref;
@@ -77,7 +76,6 @@ public class InputSurvey extends AppCompatActivity {
         Button next = findViewById(R.id.btnNext);
         mAdapterViewFlipper = findViewById(R.id.adapterViewFlipper);
         questions = survey.getQuestions();
-        answers = new Answer[questions.length];
 
         // adapter
         mAdapterViewFlipper.setAdapter(new QuestionAdapter(this, questions));
@@ -160,7 +158,6 @@ public class InputSurvey extends AppCompatActivity {
             }
             answer.setAnswer("" + ans);
         }
-        answers[pos] = answer;
         q.setAnswer(answer);
         // flip
         if( pos == questions.length-1 ) {
