@@ -116,7 +116,30 @@ public class SharedPrefService {
 
     public void updateSurveys(JSONArray jAry) {
         // update array
-        storedSurveysAry = jAry;
+        Log.d("STORED:",storedSurveysAry.toString());
+        Log.d("STORING:",jAry.toString());
+        // merge incoming surveys into existing array
+        for( int i = 0; i < jAry.length(); i++ ) {
+            try {
+                JSONObject newObj = jAry.getJSONObject(i);
+                int newID = newObj.getInt("sid");
+                Log.d("STORING item ID:", String.format("%d",newID) );
+                // compare agains existing surveys
+                boolean found = false;
+                for( int j = 0; j < storedSurveysAry.length(); j++ ) {
+                    int oldID = storedSurveysAry.getJSONObject(j).getInt("sid");
+                    Log.d("STORED item ID:", String.format("%d",oldID) );
+                    if( newID == oldID ) {
+                        found = true;
+                    }
+                }
+                if( !found ) {
+                    storedSurveysAry.put( storedSurveysAry.length(), newObj );
+                }
+            } catch( JSONException err ) {
+                // TODO: something about it
+            }
+        }
         // update list
         generateListFromArray();
         // update string
