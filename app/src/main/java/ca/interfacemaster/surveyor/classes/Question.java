@@ -77,7 +77,7 @@ public class Question implements Serializable {
             try {
                 max = Integer.parseInt(this.options.split("\\.\\.")[1].trim());
             } catch( NullPointerException e ) {
-                max = 10;
+                max = 4; // TODO: replace this with something else
             }
             String range[] = new String[(1+max-min)];
             for( int i = min; i <= max; i++ ) {
@@ -127,9 +127,6 @@ public class Question implements Serializable {
             if( idx > -1 ) {
                 return idx;
             }
-
-            return -1;
-            // return Integer.parseInt(ans);
 
             // TODO: handle the range out of bounds exception
             // when answer doesn't match the options

@@ -157,6 +157,7 @@ public class InputSurvey extends AppCompatActivity {
             }
             answer.setAnswer("" + ans);
         }
+        Log.d("SETTING ANSWER",answer.toString());
         q.setAnswer(answer);
         // flip
         if( pos == questions.length-1 ) {

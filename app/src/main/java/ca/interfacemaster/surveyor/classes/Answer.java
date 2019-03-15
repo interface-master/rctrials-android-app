@@ -16,10 +16,6 @@ public class Answer implements Serializable {
     public Answer(int qid) {
         this.qid = qid;
     }
-//    public Answer(int qid, String answer) {
-//        this.qid = qid;
-//        this.answer = answer;
-//    }
 
     public Answer(int qid, boolean dirty) {
         this.qid = qid;
