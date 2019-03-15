@@ -91,7 +91,6 @@ public class InputSurvey extends AppCompatActivity {
                 finish();
             }
         });
-        // TODO: add logic for next/finish button
         next.setEnabled(true);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
