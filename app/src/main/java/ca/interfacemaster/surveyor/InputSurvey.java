@@ -106,8 +106,8 @@ public class InputSurvey extends AppCompatActivity {
         int pos = mAdapterViewFlipper.getDisplayedChild();
         View v = mAdapterViewFlipper.getCurrentView();
         Question q = questions[pos];
+        Answer answer = q.hasAnswer() ? q.getAnswer() : new Answer(q.getQuestionID());
         // save answer
-        Answer answer = new Answer(q.getQuestionID());
         if (q.getType().equalsIgnoreCase("text")) {
             // text input
             EditText ans = v.findViewById(R.id.editTextAnswer);
@@ -116,9 +116,9 @@ public class InputSurvey extends AppCompatActivity {
         } else if (q.getType().equalsIgnoreCase("likert")) {
             // slider input
             SeekBar ans = v.findViewById(R.id.sliderAnswer);
-            if( ans.isDirty() ) {
+            if( q.hasAnswer() && q.getAnswer().isDirty() ) {
                 answer.setAnswer("" + q.getOptions()[ans.getProgress()]);
-            } else {
+            } else if( !q.hasAnswer() ) {
                 answer.setAnswer("");
             }
 
