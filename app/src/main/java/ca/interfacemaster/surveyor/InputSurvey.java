@@ -124,7 +124,7 @@ public class InputSurvey extends AppCompatActivity {
         } else if (q.getType().equalsIgnoreCase("slider")) {
             // slider input
             SeekBar ans = v.findViewById(R.id.sliderAnswer);
-            String ansValue = "";
+            String ansValue = q.hasAnswer() ? q.getAnswer().getAnswer() : "";
             if( q.hasAnswer() && q.getAnswer().isDirty() ) {
                 try {
                     int ansIntVal = Integer.parseInt(q.getOptions()[0]);
