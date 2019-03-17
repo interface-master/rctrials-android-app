@@ -65,7 +65,10 @@ public class Question implements Serializable {
     public String[] getOptions() {
         if( this.options.indexOf("|") > 0 ) {
             // array delimited by pipe "|"
-            return this.options.trim().split("\\s*\\|\\s*");
+            return this.options
+//                    .replaceAll("\\[\\d\\]","")
+                    .trim()
+                    .split("\\s*\\|\\s*");
         } else if( this.options.indexOf("..") > 0 ) {
             // range delimited by double dot ".."
             int min, max;
@@ -89,10 +92,20 @@ public class Question implements Serializable {
         }
     }
 
+    public String[] getOptionLabels() {
+        String[] retval = this.getOptions();
+        for( int i = 0; i < retval.length; i++ ) {
+            retval[i] = retval[i].replaceAll("\\[\\d\\]", "").trim();
+        }
+        return retval;
+    }
+
     public int getOptionIndex(String opt) {
         String[] opts = this.getOptions();
         for( int i = 0; i < opts.length; i++ ) {
-            if( opts[i].equalsIgnoreCase(opt) ) {
+            if( opts[i]
+//                    .replaceAll("\\[\\d\\]","")
+                    .equalsIgnoreCase(opt) ) {
                 return i;
             }
         }
