@@ -173,10 +173,7 @@ public class SharedPrefService {
         for( int i = 0; i < storedSurveysAry.length(); i++ ) {
             try {
                 JSONObject s = storedSurveysAry.getJSONObject(i);
-                if (s.getInt("sid") == survey.getSurveyID()) {
-                    // don't copy this one
-                    break;
-                } else {
+                if (s.getInt("sid") != survey.getSurveyID()) {
                     newAry.put( storedSurveysAry.get(i) );
                 }
             } catch (JSONException e) {
