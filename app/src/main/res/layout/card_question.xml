@@ -32,19 +32,32 @@
         <TextView
             android:id="@+id/sliderTooltip"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="42dp"
+            android:gravity="center_horizontal"
+            android:textSize="16dp"
             android:visibility="gone"
             />
 
         <SeekBar
             android:id="@+id/sliderAnswer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="44dp"
             android:tickMark="@drawable/custom_slider_notch"
             android:visibility="gone"
             />
+
+        <LinearLayout
+            android:id="@+id/sliderLabels"
+            android:layout_gravity="fill_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            >
+        </LinearLayout>
 
     </LinearLayout>
 

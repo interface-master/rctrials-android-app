@@ -1,19 +1,23 @@
 package ca.interfacemaster.surveyor.adapters;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -58,6 +62,7 @@ public class QuestionAdapter extends BaseAdapter {
         // refs
         final Question q = questionList.get(position);
         final String[] opts = q.getOptions();
+        final String[] optLabels = q.getOptionLabels();
         final TextView question = convertView.findViewById(R.id.textQuestion);
         final RadioGroup radioGroup = convertView.findViewById(R.id.radioAnswer);
         // confs
@@ -76,10 +81,52 @@ public class QuestionAdapter extends BaseAdapter {
 
             case "likert":
             case "slider":
+                final LinearLayout labelContainer = convertView.findViewById(R.id.sliderLabels);
                 final SeekBar slider = convertView.findViewById(R.id.sliderAnswer);
                 final TextView tooltip = convertView.findViewById(R.id.sliderTooltip);
+                // render labels - max of 5
+                // if odd - great
+                // if even - take intervals + last one
+                String[] labels = new String[0];
+                int maxLabels = ( opts.length % 2 == 0 ) ? 4 : 5;
+                if( opts.length > maxLabels ) {
+                    labels = new String[maxLabels];
+                    int interval = (int) Math.round(Math.floor((double) opts.length / (maxLabels-1)));
+                    for (int i = 0; i < maxLabels; i++) {
+                        labels[i] = optLabels[ i*interval ];
+                    }
+                    if( opts.length % 2 == 0 ) {
+                        labels[labels.length-1] = optLabels[opts.length-1];
+                    }
+                } else {
+                    labels = new String[opts.length];
+                    for( int i = 0; i < opts.length; i++ ) {
+                        labels[i] = optLabels[i];
+                    }
+                }
+//                Log.d("LABELS",":::::::::::::");
+//                Log.d("LABELS size", String.format("%d",labels.length) );
+                for( int i = 0; i < labels.length; i++ ) {
+//                    Log.d("LABEL "+i, labels[i] );
+                    TextView newLabel = new TextView(mContext);
+                    newLabel.setLayoutParams(
+                            new TableLayout.LayoutParams(1, TableLayout.LayoutParams.WRAP_CONTENT, 1)
+                    );
+                    newLabel.setText(labels[i]);
+                    // if first then left
+                    if(i==0) newLabel.setGravity(Gravity.LEFT);
+                    // if last then right
+                    else if(i==labels.length-1) newLabel.setGravity(Gravity.RIGHT);
+                    // if middle then center
+                    else newLabel.setGravity(Gravity.CENTER_HORIZONTAL);
+                    // add
+                    labelContainer.addView( newLabel );
+                }
+                labelContainer.setVisibility(View.VISIBLE);
+                // render tooltip
                 tooltip.setText("");
                 tooltip.setVisibility(View.VISIBLE);
+                // render slider
                 slider.setMax(opts.length-1);
                 if(q.hasAnswer() && !q.getAnswerText().equalsIgnoreCase("")) {
                     tooltip.setText(q.getAnswerText());
