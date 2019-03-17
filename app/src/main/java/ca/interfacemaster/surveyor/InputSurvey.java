@@ -125,13 +125,13 @@ public class InputSurvey extends AppCompatActivity {
             // slider input
             SeekBar ans = v.findViewById(R.id.sliderAnswer);
             String ansValue = "";
-            if( ans.isDirty() ) {
+            if( q.hasAnswer() && q.getAnswer().isDirty() ) {
                 try {
                     int ansIntVal = Integer.parseInt(q.getOptions()[0]);
                     ansIntVal += ans.getProgress();
                     ansValue = String.format("%d", ansIntVal);
                 } catch (NumberFormatException e) {
-                    ansValue = q.getOptions()[0];
+                    ansValue = q.getOptions()[ ans.getProgress() ];
                 }
             }
             answer.setAnswer("" + ansValue);
