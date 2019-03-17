@@ -142,6 +142,8 @@ public class InputSurvey extends AppCompatActivity {
             RadioButton ans = findViewById( ansGroup.getCheckedRadioButtonId() );
             if( ans != null ) {
                 answer.setAnswer("" + ans.getText());
+            } else {
+                answer.setAnswer("");
             }
 
         } else if (q.getType().equalsIgnoreCase("check")) {
