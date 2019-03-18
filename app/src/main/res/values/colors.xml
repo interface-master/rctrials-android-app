@@ -7,4 +7,6 @@
     <color name="colorTertiary">#F1C945</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGrey">#C4C4C4</color>
+    <color name="colorTransparent">#00000000</color>
 </resources>
