@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -25,10 +26,12 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public Button action;
+        public TextView status;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             action = itemView.findViewById(R.id.actionButton);
+            status = itemView.findViewById(R.id.statusText);
             // TODO: add more details to card
         }
     }
@@ -72,6 +75,7 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
                 break;
             case Survey.SENDING:
                 icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_return);
+                holder.status.setText("sending");
                 break;
         }
         holder.action.setCompoundDrawablesWithIntrinsicBounds(null,null, icon, null);

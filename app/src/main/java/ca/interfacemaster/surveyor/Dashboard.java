@@ -272,6 +272,7 @@ public class Dashboard extends AppCompatActivity {
                     answers.put( questions[j].getAnswer().getJSONObject() );
                 }
                 Log.d("COMPLETED SURVEYS",String.format("POSTING %s / %s / %s",pref.getTID(),survey.getSurveyID(),pref.getUUID()));
+                survey.markSending(true);
                 sending = true;
                 ApiService.postSurvey(pref.getTID(), survey.getSurveyID(), pref.getUUID(), answers, new JsonHttpResponseHandler() {
                     @Override

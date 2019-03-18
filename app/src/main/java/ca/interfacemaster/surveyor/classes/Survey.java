@@ -16,10 +16,12 @@ public class Survey implements Serializable {
     private int sid;     // Survey ID
     private String name; // Survey Name
     private transient Question[] questions;
+    private boolean sending = false;
 
     public static final int DEFAULT = 0;
     public static final int INCOMPLETE = 1;
     public static final int COMPLETE = 2;
+    public static final int SENDING = 3;
 
     public Survey() {}
     public Survey(JSONObject obj) {
@@ -97,6 +99,9 @@ public class Survey implements Serializable {
     }
 
     public int getState() {
+        if( sending ) {
+            return Survey.SENDING;
+        }
         int countQs = getQuestionsLength();
         int countAs = 0;
         Log.d("SURVEY GETSTATE: Survey", String.format("ID:%d",getSurveyID()));
@@ -113,6 +118,10 @@ public class Survey implements Serializable {
             return Survey.COMPLETE;
         }
         return Survey.DEFAULT;
+    }
+
+    public void markSending(boolean state) {
+        sending = state;
     }
 
     @Override
