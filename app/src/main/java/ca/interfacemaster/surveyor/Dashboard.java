@@ -42,6 +42,7 @@ public class Dashboard extends AppCompatActivity {
     public static RecyclerView mRecyclerView;
     private DrawerLayout mDrawerLayout;
     private SharedPrefService pref;
+    private boolean sending;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,6 +255,10 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void sendCompletedSurveys(List<Survey> surveyList) {
+        if( sending ) {
+            Log.d("XXXXXXX","X");
+            return;
+        }
         for( int i = 0; i < surveyList.size(); i++ ) {
             final Survey survey = surveyList.get(i);
             if( survey.getState() == Survey.COMPLETE ) {
@@ -262,6 +267,7 @@ public class Dashboard extends AppCompatActivity {
                 for( int j = 0; j < questions.length; j++ ) {
                     answers.put( questions[j].getAnswer().getJSONObject() );
                 }
+                sending = true;
                 ApiService.postSurvey(pref.getTID(), survey.getSurveyID(), pref.getUUID(), answers, new JsonHttpResponseHandler() {
                     @Override
                     public void onStart() {
@@ -290,6 +296,7 @@ public class Dashboard extends AppCompatActivity {
 
                     @Override
                     public void onFinish() {
+                        sending = false;
                         super.onFinish();
                         // TODO: turn off spinner
                     }
