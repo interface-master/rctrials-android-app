@@ -234,11 +234,12 @@ public class Dashboard extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
+        Log.d("DASHBOARD", "renderSurveyCards: RENDERED");
     }
 
     private void updateSurveyCards() {
+        Log.d("DASHBOARD","updateSurveyCards: UPDATING");
         // refs
-        List<Survey> surveyList = pref.getSurveyList();
         TextView header = findViewById(R.id.textAvailableSurveys);
         // header
         if(pref.getSurveyList().size() == 0) {
@@ -246,8 +247,10 @@ public class Dashboard extends AppCompatActivity {
         } else {
             header.setText(getText(R.string.available_surveys));
         }
-        // cards
+        // get list of surveys
+        List<Survey> surveyList = pref.getSurveyList();
         sendCompletedSurveys(surveyList);
+        // cards
         RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
         ((SurveyAdapter)adapter).setSurveyList(surveyList);
         mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -255,6 +258,7 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void sendCompletedSurveys(List<Survey> surveyList) {
+        Log.d("COMPLETED SURVEYS",String.format("Start with %d surveys; bool %s",surveyList.size(),sending));
         if( sending ) {
             Log.d("XXXXXXX","X");
             return;
@@ -267,6 +271,7 @@ public class Dashboard extends AppCompatActivity {
                 for( int j = 0; j < questions.length; j++ ) {
                     answers.put( questions[j].getAnswer().getJSONObject() );
                 }
+                Log.d("COMPLETED SURVEYS",String.format("POSTING %s / %s / %s",pref.getTID(),survey.getSurveyID(),pref.getUUID()));
                 sending = true;
                 ApiService.postSurvey(pref.getTID(), survey.getSurveyID(), pref.getUUID(), answers, new JsonHttpResponseHandler() {
                     @Override
@@ -286,6 +291,7 @@ public class Dashboard extends AppCompatActivity {
                             }
                         } catch (JSONException e) {
                             // todo: something about it
+                            Log.d("DASH:SEND:SUCS",e.getMessage());
                         }
                     }
 
@@ -303,5 +309,6 @@ public class Dashboard extends AppCompatActivity {
                 });
             }
         }
+        Log.d("COMPLETED SURVEYS",String.format("DONE"));
     }
 }
