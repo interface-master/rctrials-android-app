@@ -147,6 +147,8 @@ public class QuestionAdapter extends BaseAdapter {
                     public void onStartTrackingTouch(SeekBar seekBar) {
                         // track start
                         seekBar.setThumb( seekBar.getResources().getDrawable(R.drawable.custom_slider_thumb) );
+                        tooltip.setText( opts[seekBar.getProgress()] );
+                        // mark answer interaction
                         if( q.hasAnswer() ) {
                             q.getAnswer().markAsDirty();
                         } else {
