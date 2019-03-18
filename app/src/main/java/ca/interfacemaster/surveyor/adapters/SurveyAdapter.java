@@ -62,13 +62,16 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
         final Survey survey = surveyList.get(position);
         holder.action.setText(survey.getName());
         // set icon based on survey answer state
-        Drawable icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_black);
+        Drawable icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment);
         switch (survey.getState()) {
-            case 1:
-                icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_late_black);
+            case Survey.INCOMPLETE:
+                icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_late);
                 break;
-            case 2:
-                icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_turned_in_black);
+            case Survey.COMPLETE:
+                icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_turned_in);
+                break;
+            case Survey.SENDING:
+                icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_return);
                 break;
         }
         holder.action.setCompoundDrawablesWithIntrinsicBounds(null,null, icon, null);
