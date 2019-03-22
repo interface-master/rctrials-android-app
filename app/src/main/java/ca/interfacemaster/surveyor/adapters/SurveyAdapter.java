@@ -67,6 +67,7 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final Survey survey = surveyList.get(position);
         holder.action.setText(survey.getName());
+        holder.status.setText("");
         // set icon based on survey answer state
         Drawable icon = ContextCompat.getDrawable(mContext, R.drawable.ic_assignment);
         switch (survey.getState()) {
