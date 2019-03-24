@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
-        android:id="@+id/menu_group_top"
         android:checkableBehavior="single"
         android:enabled="true"
+        android:id="@+id/menu_group_top"
         >
         <item
+            android:checkable="true"
             android:icon="@drawable/ic_add_black"
             android:id="@+id/nav_new"
+            android:orderInCategory="0"
             android:title="Register in a New Trial"
             />
     </group>
@@ -23,8 +25,10 @@
         android:id="@+id/menu_group_bottom"
         >
         <item
+            android:checkable="true"
             android:icon="@drawable/ic_settings_black"
             android:id="@+id/nav_manage"
+            android:orderInCategory="1000"
             android:title="Settings"
             />
     </group>
