@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menu_group_top"
+        android:checkableBehavior="single"
+        android:enabled="true"
+        >
         <item
+            android:icon="@drawable/ic_add_black"
+            android:id="@+id/nav_new"
+            android:title="Register in a New Trial"
+            />
+    </group>
+    <group
+        android:checkableBehavior="single"
+        android:enabled="true"
+        android:id="@+id/menu_group_middle"
+        >
+    </group>
+    <group
+        android:checkableBehavior="single"
+        android:enabled="true"
+        android:id="@+id/menu_group_bottom"
+        >
+        <item
+            android:icon="@drawable/ic_settings_black"
             android:id="@+id/nav_manage"
-            android:title="Setup" />
+            android:title="Settings"
+            />
     </group>
 </menu>
