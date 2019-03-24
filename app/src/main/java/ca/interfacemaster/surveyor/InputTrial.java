@@ -63,9 +63,9 @@ public class InputTrial extends AppCompatActivity {
                             bar.setProgress(100);
                             log.setText(getString(R.string.registered));
                             // save TID and UUID
-                            pref.updateTID(tid);
-                            pref.updateUUID(uuid);
-                            pref.updateSurveys(surveys);
+                            pref.setTID(tid);
+                            pref.setUUID(tid,uuid);
+                            pref.setSurveys(tid,surveys);
                             // TODO: goto survey view to process pre-test surveys
                             Log.d("InputTrial",response.getString("surveys"));
                             // finished

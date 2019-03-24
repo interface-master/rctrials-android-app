@@ -16,31 +16,47 @@ import ca.interfacemaster.surveyor.R;
 import ca.interfacemaster.surveyor.classes.Survey;
 
 public class SharedPrefService {
+    public static String PREF_SEL;
     public static String PREF_TID;
     public static String PREF_UUID;
     public static String PREF_SURVEYS;
 
     private static Context mContext;
     private static SharedPreferences prefs;
-    private static String storedTID;
-    private static String storedUUID;
-    private static String storedSurveys;
-    private static JSONArray storedSurveysAry;
-    private static List<Survey> storedSurveyList;
+    private static int selected;                   // 0
+    private static String storedTID;               // "ab12"
+    private static JSONArray storedTIDJSON;        // ["ab12","cd34",...]
+    private static String storedUUID;              // "uvw-xyz..."
+    private static String storedSurveys;           // "{...}"
+    private static JSONArray storedSurveysAry;     // [...]
+    private static List<Survey> storedSurveyList;  // ...
+
+    //**********
+    // Model:
+    // selected:       v
+    // TID: [ a1, b2, c3, ... ]
+    // UID.a1 = 'x';
+    // ...
+    // SURVEYS.a1 = {}
+    // ...
+    //**********
 
     public SharedPrefService(Context context) {
         // set context
         this.mContext = context;
         // set consts
+        PREF_SEL = mContext.getString(R.string.pref_selected);
         PREF_TID = mContext.getString(R.string.pref_tid);
         PREF_UUID = mContext.getString(R.string.pref_uuid);
         PREF_SURVEYS = mContext.getString(R.string.pref_surveys);
         // set shared prefs
         prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         // retrieve data
+        retrieveSelected();
         retrieveTID();
-        retrieveUUID();
-        retrieveSurveys();
+        Log.d("RETRIEVING", "uuid with tid:"+storedTID);
+        retrieveUUID(storedTID);
+        retrieveSurveys(storedTID);
     }
 
     // passthrough
@@ -51,16 +67,49 @@ public class SharedPrefService {
 
     // TID
 
+    private void retrieveSelected() {
+        selected = prefs.getInt(PREF_SEL, 0);
+    }
+
+    private int getSelected() {
+        return selected;
+    }
+
     private void retrieveTID() {
-        storedTID = prefs.getString(PREF_TID, null);
+        try {
+            storedTIDJSON = new JSONArray( prefs.getString(PREF_TID, null) );
+            storedTID = storedTIDJSON.getString( getSelected() );
+        } catch (Exception e) {
+            storedTIDJSON = new JSONArray();
+            storedTID = null;
+        }
     }
 
     public String getTID() {
-        return storedTID;
+        try {
+            return storedTIDJSON.get(selected).toString();
+        } catch (JSONException e) {
+            return null;
+        }
     }
 
-    public void updateTID(String tid) {
-        storedTID = tid;
+    public String[] getTIDs() {
+        String[] ary = new String[storedTIDJSON.length()];
+        for(int i = 0; i < storedTIDJSON.length(); i++ ) {
+            String t;
+            try {
+                t = storedTIDJSON.getString(i);
+            } catch (JSONException e) {
+                t = "";
+            }
+            ary[i] = t;
+        }
+        return ary;
+    }
+
+    public void setTID(String tid) {
+        storedTIDJSON.put(tid);
+        storedTID = storedTIDJSON.toString();
         storeTID();
     }
 
@@ -72,30 +121,31 @@ public class SharedPrefService {
 
     // UUID
 
-    private void retrieveUUID() {
-        storedUUID = prefs.getString(PREF_UUID, null);
+    private void retrieveUUID(String tid) {
+        Log.d("RetrieveUUID","tid:"+tid);
+        storedUUID = prefs.getString(PREF_UUID + "." + tid, null);
     }
 
     public String getUUID() {
         return storedUUID;
     }
 
-    public void updateUUID(String uuid) {
+    public void setUUID(String tid, String uuid) {
         storedUUID = uuid;
-        storeUUID();
+        storeUUID(tid);
     }
 
-    private void storeUUID() {
+    private void storeUUID(String tid) {
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREF_UUID, storedUUID);
+        editor.putString(PREF_UUID + "." + tid, storedUUID);
         editor.commit();
     }
 
     // SURVEYS
 
-    private void retrieveSurveys() {
+    private void retrieveSurveys(String tid) {
         // remember string
-        storedSurveys = prefs.getString(PREF_SURVEYS, "");
+        storedSurveys = prefs.getString(PREF_SURVEYS + "." + tid, "");
         // generate ary
         generateArrayFromString();
         // generate list
@@ -114,7 +164,11 @@ public class SharedPrefService {
         return storedSurveyList;
     }
 
-    public void updateSurveys(JSONArray jAry) {
+    public void setSurveys(JSONArray jAry) {
+        setSurveys(storedTID, jAry);
+    }
+
+    public void setSurveys(String tid, JSONArray jAry) {
         // update array
         // merge incoming surveys into existing array
         for( int i = 0; i < jAry.length(); i++ ) {
@@ -141,7 +195,7 @@ public class SharedPrefService {
         // update string
         generateStringFromArray();
         // update shared prefs
-        storeSurveys();
+        storeSurveys(tid);
     }
 
     public void updateSurvey(Survey survey) {
@@ -163,7 +217,7 @@ public class SharedPrefService {
         // update string
         generateStringFromArray();
         // update shared prefs
-        storeSurveys();
+        storeSurveys(storedTID);
     }
 
     public void removeSurvey(Survey survey) {
@@ -186,7 +240,7 @@ public class SharedPrefService {
         // update string
         generateStringFromArray();
         // update shared prefs
-        storeSurveys();
+        storeSurveys(storedTID);
     }
 
     private void generateStringFromArray() {
@@ -219,9 +273,9 @@ public class SharedPrefService {
         }
     }
 
-    private void storeSurveys() {
+    private void storeSurveys(String tid) {
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREF_SURVEYS, storedSurveys);
+        editor.putString(PREF_SURVEYS + "." + tid, storedSurveys);
         editor.commit();
     }
 
