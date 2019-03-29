@@ -115,18 +115,18 @@ public class Dashboard extends AppCompatActivity {
                     // perform action based on what menu item is clicked
                     switch (menuItem.getItemId()) {
                         case MENU_ADD:
-                            Log.d("HELLOW", "add new");
+                            Log.d("HELLO A", "add new");
                             startActivityForResult(
                                     new Intent(Dashboard.this, InputTrial.class),
                                     1
                             );
                             return true;
                         case MENU_SETTINGS:
-                            Log.d("HELLOW", "settings");
+                            Log.d("HELLO C", "settings");
                             // todo: start activity for a settings screen
                             return true;
                         default:
-                            Log.d("HELLOX", "view "+menuItem.getTitle() );
+                            Log.d("HELLO B", "view "+menuItem.getTitle() );
                             // todo: switch trials
                             return Dashboard.super.onOptionsItemSelected(menuItem);
                     }
