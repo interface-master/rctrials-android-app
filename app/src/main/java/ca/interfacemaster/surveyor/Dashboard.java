@@ -157,7 +157,7 @@ public class Dashboard extends AppCompatActivity {
      * Checks for presence of TID and UUID and configures the view accordingly.
      */
     private void checkConfig() {
-        if( pref.contains(pref.PREF_TID) && pref.contains(pref.PREF_UUID) ) {
+        if( pref.contains(pref.PREF_TID) ) {
             configureSurveys();
         } else {
             configureSetUpButton();
