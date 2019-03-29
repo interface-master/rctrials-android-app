@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ca.interfacemaster.surveyor.R;
@@ -105,6 +106,10 @@ public class SharedPrefService {
             ary[i] = t;
         }
         return ary;
+    }
+
+    public boolean hasTID(String tid) {
+        return Arrays.asList(getTIDs()).contains(tid);
     }
 
     public void setTID(String tid) {

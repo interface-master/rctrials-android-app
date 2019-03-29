@@ -11,6 +11,7 @@
 
     <string name="receiving">Receiving</string>
     <string name="register">Register</string>
+    <string name="already_registered">You are already registered in this Trial</string>
     <string name="registered">Registered</string>
     <string name="registering">Registering</string>
     <string name="registered_sub_header">Press the button below to check for available surveys.</string>

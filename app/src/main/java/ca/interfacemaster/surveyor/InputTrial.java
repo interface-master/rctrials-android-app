@@ -43,6 +43,12 @@ public class InputTrial extends AppCompatActivity {
             final ProgressBar bar = findViewById(R.id.progressBarTID);
             final EditText input = findViewById(R.id.editTextTID);
             final String tid = input.getText().toString();
+            // validate with shared prefs
+            if( pref.hasTID(tid) ) {
+                bar.setProgress(0);
+                log.setText(getString(R.string.already_registered));
+                return;
+            }
             // validate with server
             ApiService.registerIntoTrial(tid, new JsonHttpResponseHandler() {
                 @Override
