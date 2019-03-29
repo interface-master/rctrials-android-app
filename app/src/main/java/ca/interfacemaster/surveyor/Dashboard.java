@@ -230,7 +230,7 @@ public class Dashboard extends AppCompatActivity {
                             Log.d("dashboard bundle", bundle.toString());
                             Log.d("dashboard timeline",timeline.toString());
 
-                            pref.updateSurveys(timeline);
+                            pref.setSurveys(timeline);
                             updateSurveyCards();
 
                             // TODO: goto survey view to process surveys
@@ -260,11 +260,13 @@ public class Dashboard extends AppCompatActivity {
         listHeader.setVisibility(View.VISIBLE);
         listSurveys.setVisibility(View.VISIBLE);
 
-        renderSurveyCards();
+        setupNav();
+
+        updateSurveyCards();
     }
 
-    private void renderSurveyCards() {
-        Log.d("DASHBOARD", "renderSurveyCards: RENDERING");
+    private void updateSurveyCards() {
+        Log.d("DASHBOARD","updateSurveyCards: UPDATING");
         // refs
         mRecyclerView = findViewById(R.id.recyclerView);
         TextView header = findViewById(R.id.textAvailableSurveys);
@@ -277,31 +279,19 @@ public class Dashboard extends AppCompatActivity {
         // get list of surveys
         List<Survey> surveyList = pref.getSurveyList();
         sendCompletedSurveys(surveyList);
-        // set up recycler with adapter and layout manager
-        RecyclerView.Adapter adapter = new SurveyAdapter(this, surveyList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
-        Log.d("DASHBOARD", "renderSurveyCards: RENDERED");
-    }
-
-    private void updateSurveyCards() {
-        Log.d("DASHBOARD","updateSurveyCards: UPDATING");
-        // refs
-        TextView header = findViewById(R.id.textAvailableSurveys);
-        // header
-        if(pref.getSurveyList().size() == 0) {
-            header.setText(getText(R.string.no_available_surveys));
-        } else {
-            header.setText(getText(R.string.available_surveys));
-        }
-        // get list of surveys
-        List<Survey> surveyList = pref.getSurveyList();
-        sendCompletedSurveys(surveyList);
         // cards
-        RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
-        ((SurveyAdapter)adapter).setSurveyList(surveyList);
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        Log.d("CHECK ADAPTER:",String.format("%s",mRecyclerView.getAdapter() == null));
+        RecyclerView.Adapter adapter;
+        if( mRecyclerView.getAdapter() == null ) {
+            adapter = new SurveyAdapter(this, surveyList);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setAdapter(adapter);
+        } else {
+            adapter = mRecyclerView.getAdapter();
+            ((SurveyAdapter)adapter).setSurveyList(surveyList);
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+        }
         Log.d("DASHBOARD","updateSurveyCards: UPDATED");
     }
 
