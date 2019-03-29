@@ -199,7 +199,7 @@ public class Dashboard extends AppCompatActivity {
         TextView listHeader = findViewById(R.id.textAvailableSurveys);
         View listSurveys = findViewById(R.id.includeListSurveys);
         // text
-        header.setText(getString(R.string.welcome_header));
+        header.setText( getString(R.string.welcome_trial_header) + " " + pref.getTID() );
         subHeader.setText(getString(R.string.registered_sub_header));
         button.setText(getString(R.string.registered_check));
         button.setVisibility(View.VISIBLE);
