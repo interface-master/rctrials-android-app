@@ -19,6 +19,7 @@
     <string name="no_available_surveys">No Available Surveys</string>
 
     <string name="welcome_header">Welcome</string>
+    <string name="welcome_trial_header">Trial</string>
     <string name="welcome_set_up">Set Up</string>
     <string name="welcome_sub_header">You are currently not enrolled in any trials.\nClick the button below to enter your trial ID.</string>
 </resources>
