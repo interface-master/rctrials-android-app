@@ -42,6 +42,10 @@ public class Dashboard extends AppCompatActivity {
     private SharedPrefService pref;
     private boolean sending;
 
+    // menu
+    private static final int MENU_ADD = Menu.FIRST;
+    private static final int MENU_SETTINGS = Menu.FIRST + 99;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,15 +75,61 @@ public class Dashboard extends AppCompatActivity {
 
     private void setupNav() {
         mDrawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+
+        Menu menu = navigationView.getMenu();
+        menu.clear();
+
+        // add first item
+        menu.add( R.id.menu_group_top, MENU_ADD, 0, R.string.menu_register )
+                .setIcon(R.drawable.ic_add_black)
+                .setCheckable(true);
+
+        // add trials
+        String[] tids = pref.getTIDs();
+        for(int i = 0; i < tids.length; i++ ) {
+            Log.d("XYZ", String.format("%d : ",i) + tids[i] );
+            menu.add( R.id.menu_group_middle, Menu.FIRST+i, Menu.FIRST+i, tids[i] )
+                    .setIcon(R.drawable.ic_assignment_black)
+                    .setCheckable(true);
+        }
+
+        // add last item
+        menu.add( R.id.menu_group_bottom, MENU_SETTINGS, MENU_SETTINGS, R.string.menu_settings )
+                .setIcon(R.drawable.ic_settings_black)
+                .setCheckable(true);
+
+        // set event listener
         navigationView.setNavigationItemSelectedListener(
             new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    // uncheck all items
+                    Menu menu = navigationView.getMenu();
+                    for( int i = 0; i < menu.size(); i++ ) {
+                        menu.getItem(i).setChecked(false);
+                    }
                     menuItem.setChecked(true);
+                    // close drawer
                     mDrawerLayout.closeDrawers();
-                    // TODO: add code here to actually do stuff when items are clicked
-                    return true;
+                    // perform action based on what menu item is clicked
+                    switch (menuItem.getItemId()) {
+                        case MENU_ADD:
+                            Log.d("HELLOW", "add new");
+                            startActivityForResult(
+                                    new Intent(Dashboard.this, InputTrial.class),
+                                    1
+                            );
+                            return true;
+                        case MENU_SETTINGS:
+                            Log.d("HELLOW", "settings");
+                            // todo: start activity for a settings screen
+                            return true;
+                        default:
+                            Log.d("HELLOX", "view "+menuItem.getTitle() );
+                            // todo: switch trials
+                            return Dashboard.super.onOptionsItemSelected(menuItem);
+                    }
                 }
             }
         );

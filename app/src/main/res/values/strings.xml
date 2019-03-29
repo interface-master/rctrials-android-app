@@ -6,6 +6,9 @@
     <string name="pref_uuid">ca.interfacemaster.surveyor.uuid</string>
     <string name="pref_surveys">ca.interfacemaster.surveyor.surveys</string>
 
+    <string name="menu_register">Register in a New Trial</string>
+    <string name="menu_settings">Settings</string>
+
     <string name="receiving">Receiving</string>
     <string name="register">Register</string>
     <string name="registered">Registered</string>
