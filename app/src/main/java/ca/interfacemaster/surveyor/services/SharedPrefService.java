@@ -66,6 +66,27 @@ public class SharedPrefService {
         return prefs.contains(str);
     }
 
+    // SELECTED
+
+    public boolean selectTrial(String tid) {
+        Log.d("SELECTING TRIAL 1",tid);
+        // select
+        selected = Arrays.asList(getTIDs()).indexOf(tid);
+        if( selected > -1 ) {
+            // store
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(PREF_SEL, selected);
+            editor.commit();
+            // update UUID and Surveys
+            retrieveUUID(tid);
+            retrieveSurveys(tid);
+            // done
+            Log.d("SELECTING TRIAL 2", String.format("%d", selected));
+            return true;
+        }
+        return false;
+    }
+
     // TID
 
     private void retrieveSelected() {
@@ -113,14 +134,17 @@ public class SharedPrefService {
     }
 
     public void setTID(String tid) {
+        // add new TID
         storedTIDJSON.put(tid);
-        storedTID = storedTIDJSON.toString();
+        storedTID = tid;
         storeTID();
+        // set selected
+        selectTrial(tid);
     }
 
     private void storeTID() {
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREF_TID, storedTID);
+        editor.putString(PREF_TID, storedTIDJSON.toString());
         editor.commit();
     }
 

@@ -87,9 +87,9 @@ public class Dashboard extends AppCompatActivity {
 
         // add trials
         String[] tids = pref.getTIDs();
-        for(int i = 0; i < tids.length; i++ ) {
-            Log.d("XYZ", String.format("%d : ",i) + tids[i] );
-            menu.add( R.id.menu_group_middle, Menu.FIRST+i, Menu.FIRST+i, tids[i] )
+        for(int i = 1; i <= tids.length; i++ ) {
+            Log.d("DASHBOARD NAV", String.format("%d : ",i) + tids[i-1] );
+            menu.add( R.id.menu_group_middle, Menu.FIRST+i, Menu.FIRST+i, tids[i-1] )
                     .setIcon(R.drawable.ic_assignment_black)
                     .setCheckable(true);
         }
@@ -127,6 +127,9 @@ public class Dashboard extends AppCompatActivity {
                             return true;
                         default:
                             Log.d("HELLO B", "view "+menuItem.getTitle() );
+                            if( pref.selectTrial(menuItem.getTitle().toString()) ) {
+                                configureSurveys();
+                            }
                             // todo: switch trials
                             return Dashboard.super.onOptionsItemSelected(menuItem);
                     }
