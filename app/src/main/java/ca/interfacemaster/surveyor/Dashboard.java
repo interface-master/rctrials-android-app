@@ -1,8 +1,11 @@
 package ca.interfacemaster.surveyor;
 
+import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -32,14 +35,17 @@ import ca.interfacemaster.surveyor.adapters.SurveyAdapter;
 import ca.interfacemaster.surveyor.classes.Question;
 import ca.interfacemaster.surveyor.classes.Survey;
 import ca.interfacemaster.surveyor.services.ApiService;
+import ca.interfacemaster.surveyor.services.NotificationService;
 import ca.interfacemaster.surveyor.services.SharedPrefService;
 import cz.msebera.android.httpclient.Header;
 
 public class Dashboard extends AppCompatActivity {
 
+    private static Context mContext;
     public static RecyclerView mRecyclerView;
     private DrawerLayout mDrawerLayout;
     private SharedPrefService pref;
+    private NotificationService note;
     private boolean sending;
 
     // menu
@@ -49,8 +55,10 @@ public class Dashboard extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         // services
         pref = new SharedPrefService(this);
+        note = new NotificationService(this);
         // view
         setupView();
         setupNav();
@@ -99,6 +107,12 @@ public class Dashboard extends AppCompatActivity {
                 .setIcon(R.drawable.ic_settings_black)
                 .setCheckable(true);
 
+        // DEBUG vvv
+        menu.add( R.id.menu_group_bottom, MENU_SETTINGS+1, MENU_SETTINGS+1, "Test" )
+                .setIcon(R.drawable.ic_assignment_black)
+                .setCheckable(true);
+        // DEBUG ^^^
+
         // set event listener
         navigationView.setNavigationItemSelectedListener(
             new NavigationView.OnNavigationItemSelectedListener() {
@@ -125,6 +139,16 @@ public class Dashboard extends AppCompatActivity {
                             Log.d("HELLO C", "settings");
                             // todo: start activity for a settings screen
                             return true;
+                        // DEBUG vvv
+                        case MENU_SETTINGS+1:
+                            Log.d("NOTIFYING","start");
+                            note.notify(
+                                    "Notification Test",
+                                    "This is a long description in the notification text"
+                            );
+                            Log.d("NOTIFYING","done");
+                            return true;
+                        // DEBUG ^^^
                         default:
                             Log.d("HELLO B", "view "+menuItem.getTitle() );
                             if( pref.selectTrial(menuItem.getTitle().toString()) ) {
