@@ -8,5 +8,9 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrey">#C4C4C4</color>
-    <color name="colorTransparent">#00000000</color>
+
+    <color name="colorMenuIcon">#5f6368</color>
+    <color name="colorMenuIconActive">#202124</color>
+    <color name="colorMenuText">#5f6368</color>
+    <color name="colorMenuTextActive">#202124</color>
 </resources>

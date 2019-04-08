@@ -43,6 +43,12 @@ public class InputTrial extends AppCompatActivity {
             final ProgressBar bar = findViewById(R.id.progressBarTID);
             final EditText input = findViewById(R.id.editTextTID);
             final String tid = input.getText().toString();
+            // validate with shared prefs
+            if( pref.hasTID(tid) ) {
+                bar.setProgress(0);
+                log.setText(getString(R.string.already_registered));
+                return;
+            }
             // validate with server
             ApiService.registerIntoTrial(tid, new JsonHttpResponseHandler() {
                 @Override
@@ -63,9 +69,9 @@ public class InputTrial extends AppCompatActivity {
                             bar.setProgress(100);
                             log.setText(getString(R.string.registered));
                             // save TID and UUID
-                            pref.updateTID(tid);
-                            pref.updateUUID(uuid);
-                            pref.updateSurveys(surveys);
+                            pref.setTID(tid);
+                            pref.setUUID(tid,uuid);
+                            pref.setSurveys(tid,surveys);
                             // TODO: goto survey view to process pre-test surveys
                             Log.d("InputTrial",response.getString("surveys"));
                             // finished
