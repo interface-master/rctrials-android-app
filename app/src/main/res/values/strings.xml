@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Surveyor</string>
 
+    <string name="notification_channel">tk.rctrials.surveyor</string>
+
     <string name="pref_selected">ca.interfacemaster.surveyor.selected</string>
     <string name="pref_tid">ca.interfacemaster.surveyor.tid</string>
     <string name="pref_uuid">ca.interfacemaster.surveyor.uuid</string>
