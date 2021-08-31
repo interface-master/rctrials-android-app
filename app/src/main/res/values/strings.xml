@@ -1,13 +1,19 @@
 <resources>
     <string name="app_name">Surveyor</string>
 
+    <string name="notification_channel">tk.rctrials.surveyor</string>
+
+    <string name="pref_selected">ca.interfacemaster.surveyor.selected</string>
     <string name="pref_tid">ca.interfacemaster.surveyor.tid</string>
     <string name="pref_uuid">ca.interfacemaster.surveyor.uuid</string>
     <string name="pref_surveys">ca.interfacemaster.surveyor.surveys</string>
-    <string name="pref_answers">ca.interfacemaster.surveyor.answers</string>
+
+    <string name="menu_register">Register in a New Trial</string>
+    <string name="menu_settings">Settings</string>
 
     <string name="receiving">Receiving</string>
     <string name="register">Register</string>
+    <string name="already_registered">You are already registered in this Trial</string>
     <string name="registered">Registered</string>
     <string name="registering">Registering</string>
     <string name="registered_sub_header">Press the button below to check for available surveys.</string>
@@ -16,6 +22,7 @@
     <string name="no_available_surveys">No Available Surveys</string>
 
     <string name="welcome_header">Welcome</string>
+    <string name="welcome_trial_header">Trial</string>
     <string name="welcome_set_up">Set Up</string>
-    <string name="welcome_sub_header">You are currently not enrolled in a trial.\nClick the button below to enter your trial ID.</string>
+    <string name="welcome_sub_header">You are currently not enrolled in any trials.\nClick the button below to enter your trial ID.</string>
 </resources>
