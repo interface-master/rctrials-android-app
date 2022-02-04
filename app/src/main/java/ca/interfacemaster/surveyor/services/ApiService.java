@@ -1,10 +1,15 @@
 package ca.interfacemaster.surveyor.services;
 
+import android.util.Log;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class ApiService {
 //    private static final String BASE_URL = "http://10.0.2.2/api/"; // localhost when running through emulator
@@ -30,11 +35,17 @@ public class ApiService {
     }
 
     public static void postSurvey(String tid, int sid, String uuid, JSONArray answers, AsyncHttpResponseHandler responseHandler) {
-        RequestParams params = new RequestParams();
-        params.add("uuid",uuid);
-        params.add("answers",answers.toString());
-        String url = String.format("trial/%s/survey/%d",tid,sid);
-        post(url, params, responseHandler);
+        try {
+            JSONObject params = new JSONObject();
+            params.put("uuid",uuid);
+            params.put("answers",answers);
+            String url = String.format("trial/%s/survey/%d",tid,sid);
+//        post(url, params, responseHandler);
+            StringEntity strparams = new StringEntity(params.toString());
+            client.post( null, getAbsoluteUrl(url), strparams,"application/json", responseHandler);
+        } catch (Exception e) {
+            Log.w( "API.SERVICE", e.getMessage() );
+        }
     }
 
     // private supporting functions
